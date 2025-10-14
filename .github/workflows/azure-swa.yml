@@ -2,7 +2,7 @@ name: Build and Deploy Flutter Web to Azure SWA
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:

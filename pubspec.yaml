@@ -1,0 +1,49 @@
+name: protokol_serwisowy_app
+description: "Aplikacja do tworzenia protokołów serwisowych (uniwersalna: mobile/desktop/web)"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  pdf: ^3.11.1
+  printing: ^5.13.4
+  url_launcher: ^6.3.1
+  collection: any
+  intl: any
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  signature: ^5.5.0
+  connectivity_plus: ^6.0.5
+  path: ^1.9.0
+  shared_preferences: ^2.5.3
+  table_calendar: ^3.0.9
+  http: ^1.2.2
+  msal_js: ^2.14.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.3
+
+flutter:
+  uses-material-design: true
+
+  # Udostępnij pliki TTF jako assets (dla rootBundle/pdf na web)
+  assets:
+    - assets/images/logo.png
+    - assets/fonts/NotoSans-Regular.ttf
+    - assets/fonts/NotoSans-Bold.ttf
+
+  # Rejestracja jako czcionka systemowa Flutter (opcjonalnie dla TextStyle)
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/NotoSans-Regular.ttf
+        - asset: assets/fonts/NotoSans-Bold.ttf
+          weight: 700

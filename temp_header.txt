@@ -1,0 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:signature/signature.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:pdf/pdf.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
+import '../services/universal_database_service.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+

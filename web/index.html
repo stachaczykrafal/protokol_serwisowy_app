@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Dla osadzania w SharePoint: jeśli build publikujesz w katalogu CDN / Asset Library,
+       <base href="./"> zwykle bezpieczniejsze niż placeholder gdy ścieżka nie jest root. -->
+  <!-- <base href="./"> -->
+  <!-- Placeholder używany gdy budujesz z --base-href; pozostaw jeśli stosujesz wiele środowisk -->
+  <base href="$FLUTTER_BASE_HREF">
+  <!-- Jeśli NIE używasz --base-href możesz zamienić powyższe na: <base href="./"> -->
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Protokół Serwisowy">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="protokol_serwisowy_app">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>protokol_serwisowy_app</title>
+  <link rel="manifest" href="manifest.json">
+  <script>
+    window.flutterConfiguration = { renderer: "html", assetBase: "/" };
+    // Prosty logger
+    window.addEventListener('error', e => console.error('[BOOT ERR]', e.error || e.message));
+    window.addEventListener('unhandledrejection', e => console.error('[UNHANDLED]', e.reason));
+    // A11y: dodaj alt/title dla obrazów w tym dokumencie, jeśli brak
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('img:not([alt])').forEach(img => {
+        const inferred = img.getAttribute('title') || 'image';
+        img.setAttribute('alt', inferred);
+        if (!img.hasAttribute('title')) img.setAttribute('title', inferred);
+      });
+    });
+  </script>
+</head>
+<body>
+  <script src="./msal-sharepoint.js?v=1" defer></script>
+  <!-- Bootstrap Flutter -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "protokol_serwisowy_app",
+  "version": "1.0.0",
+  "description": "Professional service protocol management application built with Flutter.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sp:bundle": "esbuild src/services/sharepointUpload.ts --bundle --format=iife --outfile=dist/msal-sharepoint.js",
+    "sp:bundle:watch": "esbuild src/services/sharepointUpload.ts --bundle --format=iife --watch --outfile=dist/msal-sharepoint.js",
+    "web:build:sp": "flutter build web --release --base-href /sites/Klimatimecosp.zo.o/SiteAssets/ProtokolyApp/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/msal-browser": "^4.24.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.10"
+  }
+}

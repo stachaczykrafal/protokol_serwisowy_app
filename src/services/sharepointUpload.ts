@@ -55,9 +55,23 @@ function getPca() {
   return pca;
 }
 
+// Jednorazowa inicjalizacja MSAL (wymagana w msal-browser 4.x)
+let _pcaInitPromise: Promise<void> | null = null;
+async function initPcaOnce() {
+  const inst = getPca();
+  if (!_pcaInitPromise) {
+    _pcaInitPromise = inst.initialize().catch(err => {
+      _pcaInitPromise = null; // pozwól spróbować ponownie przy kolejnym wywołaniu
+      throw err;
+    });
+  }
+  await _pcaInitPromise;
+}
+
 async function processRedirectOnce() {
   try {
     const p = getPca();
+    await initPcaOnce(); // MSAL wymaga initialize przed handleRedirectPromise
     const result = await p.handleRedirectPromise();
     if (result?.account) account = result.account;
   } catch {
@@ -67,6 +81,9 @@ async function processRedirectOnce() {
 let _redirectProcessed = false;
 
 export async function ensureLogin(): Promise<void> {
+  // Upewnij się, że MSAL jest zainicjalizowany zanim zaczniemy jakiekolwiek wywołania
+  await initPcaOnce();
+
   if (!_redirectProcessed) {
     _redirectProcessed = true;
     await processRedirectOnce();

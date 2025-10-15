@@ -39,6 +39,9 @@ jobs:
       - name: Bundle MSAL/Graph helper into build/web
         run: npx esbuild src/services/sharepointUpload.ts --bundle --format=iife --outfile=build/web/msal-sharepoint.js
 
+      - name: Disable Flutter service worker (cache bust)
+        run: rm -f build/web/flutter_service_worker.js
+
       - name: Validate SWA token secret
         run: |
           if [ -z "${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}" ]; then

@@ -366,7 +366,7 @@ function attachGlobal(reason: string) {
     rebind: () => attachGlobal('manual')
   };
   window.SPUP = { ...(window.SPUP || {}), ...api, __attachedAt: new Date().toISOString(), __reason: reason };
-  // Eager init MSAL (bez oczekiwania/bez interakcji), aby uniknąć błędu uninitialized
+  // Eager init MSAL to avoid "uninitialized_public_client_application"
   initPcaOnce().catch(err => console.warn('[SPUP] MSAL initialize() failed (will retry on demand):', err));
   // Diagnostyka w konsoli
   if (!('__silent' in window.SPUP)) {

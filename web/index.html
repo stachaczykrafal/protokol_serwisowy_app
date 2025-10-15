@@ -38,6 +38,23 @@
       });
     });
   </script>
+
+  <!-- Enforce accessible viewport (remove user-scalable/max-scale added by Flutter) -->
+  <script>
+    (function enforceA11yViewport() {
+      const desired = 'width=device-width, initial-scale=1';
+      const apply = () => {
+        const m = document.head.querySelector('meta[flt-viewport]') || document.head.querySelector('meta[name="viewport"][flt-viewport]');
+        if (m && m.getAttribute('content') !== desired) {
+          m.setAttribute('content', desired);
+        }
+      };
+      // apply now and observe future injections
+      apply();
+      new MutationObserver(apply).observe(document.head, { childList: true, subtree: true });
+      window.addEventListener('load', apply);
+    })();
+  </script>
 </head>
 <body>
   <script src="./msal-sharepoint.js?v=3" defer></script>

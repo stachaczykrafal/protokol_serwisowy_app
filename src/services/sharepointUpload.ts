@@ -59,9 +59,10 @@ function getPca() {
 let _pcaInitPromise: Promise<void> | null = null;
 async function initPcaOnce() {
   const inst = getPca();
+  if (typeof inst.initialize !== 'function') return; // starsze MSAL – brak initialize()
   if (!_pcaInitPromise) {
     _pcaInitPromise = inst.initialize().catch(err => {
-      _pcaInitPromise = null; // pozwól spróbować ponownie przy kolejnym wywołaniu
+      _pcaInitPromise = null;
       throw err;
     });
   }
@@ -74,8 +75,10 @@ function patchMsalAutoInitPrototype() {
   const proto: any = cls?.prototype;
   if (!proto || proto.__spupPatched) return;
   const ensure = async function(this: any) {
-    if (!this.__spupInitPromise) this.__spupInitPromise = this.initialize();
-    return this.__spupInitPromise;
+    if (typeof this.initialize === 'function') {
+      this.__spupInitPromise ||= this.initialize();
+      await this.__spupInitPromise;
+    }
   };
   const wrap = (name: string) => {
     const orig = proto[name];
@@ -85,8 +88,7 @@ function patchMsalAutoInitPrototype() {
       return orig.apply(this, args);
     };
   };
-  ['handleRedirectPromise','loginPopup','loginRedirect','acquireTokenSilent','acquireTokenPopup','acquireTokenRedirect','getAllAccounts']
-    .forEach(wrap);
+  ['handleRedirectPromise','loginPopup','loginRedirect','acquireTokenSilent','acquireTokenPopup','acquireTokenRedirect','getAllAccounts'].forEach(wrap);
   proto.__spupPatched = true;
 }
 
@@ -378,6 +380,28 @@ export async function ensureM365Ready() {
   }
 }
 
+// PRZYWRÓĆ brakującą funkcję attachGlobal i przypięcie SPUP:
+function attachGlobal(reason: string) {
+  if (typeof window === 'undefined') return;
+  const api = {
+    AAD,
+    DEFAULT_SP,
+    ensureLogin,
+    ensureM365Ready,
+    uploadProtocolPdf,
+    uploadProtocolPdfDefault,
+    makeUploadOptions,
+    testSharePointAccess,
+    rebind: () => attachGlobal('manual'),
+  };
+  window.SPUP = { ...(window.SPUP || {}), ...api, __attachedAt: new Date().toISOString(), __reason: reason };
+  // Wczesna inicjalizacja MSAL (bez await – by nie blokować)
+  initPcaOnce().catch(err => console.warn('[SPUP] MSAL initialize() failed (will retry on demand):', err));
+  if (!('__silent' in window.SPUP)) {
+    console.info('[SPUP] attached (reason=' + reason + ')', window.SPUP);
+  }
+}
+
 // Automatyczne przypięcie (DOM gotowy lub natychmiast jeśli już)
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => attachGlobal('domcontentloaded'));
@@ -385,8 +409,8 @@ if (document.readyState === 'loading') {
   attachGlobal('immediate');
 }
 
-// Obsługa ręcznego prze-przypięcia (np. po dynamicznym doładowaniu innych skryptów)
+// Obsługa ręcznego prze-przypięcia
 window.addEventListener('SPUP:rebind', () => attachGlobal('event:rebind'));
 
-// Minimalny side‑effect aby uniknąć eliminacji przez tree-shaking
+// Minimalny side‑effect
 void AAD, void DEFAULT_SP;

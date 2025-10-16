@@ -154,8 +154,8 @@
             // Podpowiedz meta, jeśli brak
             const m = window.__lastProtocolMeta || {};
             window.__lastProtocolMeta = {
-              firma: m.firma ?? prompt('Nazwa firmy lub Imię i nazwisko:', m.firma || m.imieNazwisko || '') || undefined,
-              adres: m.adres ?? prompt('Adres (np. ulica i miasto):', m.adres || '') || undefined,
+              firma: (m.firma ?? prompt('Nazwa firmy lub Imię i nazwisko:', m.firma || m.imieNazwisko || '')) || undefined,
+              adres: (m.adres ?? prompt('Adres (np. ulica i miasto):', m.adres || '')) || undefined,
               date: m.date ?? new Date().toISOString().slice(0,10)
             };
             window.__lastPdfBlob = makeSimplePdf(window.__lastProtocolMeta);

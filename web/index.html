@@ -55,13 +55,40 @@
       window.addEventListener('load', apply);
     })();
   </script>
+
+  <style>
+    /* Panel z przyciskami zawsze widoczny nad Flutterem */
+    #spup-tools{
+      position:fixed; right:10px; bottom:10px;
+      z-index:2147483647; /* ponad wszystkim */
+      background:#fff8; padding:8px 10px; border-radius:8px;
+      box-shadow:0 2px 8px rgba(0,0,0,.2);
+      display:flex; gap:8px; align-items:center;
+      font-family:system-ui,Segoe UI,Arial,sans-serif;
+    }
+    #spup-tools button{ padding:6px 10px; font-size:14px; cursor:pointer; }
+  </style>
 </head>
 <body>
   <!-- Panel pomocniczy: osobne przyciski -->
-  <div id="spup-tools" style="position:fixed;right:10px;bottom:10px;z-index:99999;background:#fff8;padding:8px 10px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.2);font-family:system-ui,Segoe UI,Arial,sans-serif">
+  <div id="spup-tools">
     <button id="btnGen" style="margin-right:8px">Generuj PDF</button>
     <button id="btnSave">Zapisz do SharePoint</button>
   </div>
+  <script>
+    // Upewnij się, że panel i oba przyciski istnieją (w razie kolizji z innymi skryptami)
+    (function ensurePanel(){
+      const root = document.getElementById('spup-tools') || (()=>{
+        const d=document.createElement('div'); d.id='spup-tools'; document.body.appendChild(d); return d;
+      })();
+      if(!root.querySelector('#btnGen')){
+        const b=document.createElement('button'); b.id='btnGen'; b.textContent='Generuj PDF'; b.style.marginRight='8px'; root.appendChild(b);
+      }
+      if(!root.querySelector('#btnSave')){
+        const b=document.createElement('button'); b.id='btnSave'; b.textContent='Zapisz do SharePoint'; root.appendChild(b);
+      }
+    })();
+  </script>
   <script>
     (function () {
       const $ = (s) => document.querySelector(s);
@@ -88,7 +115,7 @@
     })();
   </script>
 
-  <script src="./msal-sharepoint.js?v=3" defer></script>
+  <script src="./msal-sharepoint.js?v=4" defer></script>
   <!-- Bootstrap Flutter -->
   <script src="flutter_bootstrap.js" async></script>
 </body>

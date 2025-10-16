@@ -76,6 +76,42 @@
     <button id="btnSave">Zapisz do SharePoint</button>
   </div>
   <script>
+    // Utwórz minimalny, poprawny PDF jako Blob (zawartość bazowa, do testu)
+    function makeSimplePdf(meta) {
+      const title = 'Protokol serwisowy';
+      const b64 =
+        'JVBERi0xLjQKJcTl8uXrp/Og0MTGCjEgMCBvYmoKPDwvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlIC9QYWdlcyAvQ291bnQgMSAvS2lkcyBbMyAwIFJdPj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZSAvUGFnZSAvUGFyZW50IDIgMCBSIC9NZWRpYUJveCBbMCAwIDYxMiA3OTJdIC9Db250ZW50cyA0IDAgUiAvUmVzb3VyY2VzIDw8L0ZvbnQgPDwvRjEgNSAwIFI+Pj4+PgplbmRvYmoKNCAwIG9iago8PC9MZW5ndGggNTQ+PgpzdHJlYW0KQlQKL0YxIDI0IFRmCjEwMCA3MDAgVGQKKEtyb3RrbzogUHJvdG9rb2wgc2Vyd2lzb3d5KSBUagpFVAplbmRzdHJlYW0KZW5kb2JqCjUgMCBvYmoKPDwvVHlwZSAvRm9udCAvU3VidHlwZSAvVHlwZTEgL0Jhc2VGb250IC9IZWx2ZXRpY2E+PgplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDY3IDAwMDAwIG4gCjAwMDAwMDAxNTUgMDAwMDAgbiAKMDAwMDAwMDI2MyAwMDAwMCBuIAowMDAwMDAwMzU1IDAwMDAwIG4gCjAwMDAwMDA0NzAgMDAwMDAgbiAKdHJhaWxlcgo8PC9TaXplIDYgL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKNTEyCiUlRU9G';
+      const bin = atob(b64);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new Blob([bytes], { type: 'application/pdf' });
+    }
+
+    // API dla Fluttera na ustawienie metadanych protokołu
+    window.setProtocolMeta = function(meta){ window.__lastProtocolMeta = meta || {}; };
+
+    // Spróbuj wstawić 2 przyciski w miejsce "starego" przycisku (jeśli to zwykły element DOM)
+    (function mountInOldSlot(){
+      const findOldBtn = () => {
+        const nodes = Array.from(document.querySelectorAll('button,[role="button"]'));
+        return nodes.find(n => /pdf|zapisz|protoko/i.test(n.textContent || ''));
+      };
+      const oldBtn = findOldBtn();
+      if (!oldBtn) return; // jeśli nie znaleziono, zostaje panel pływający
+      const panel = document.getElementById('spup-tools');
+      if (!panel) return;
+      // Podmień stary przycisk panelem z dwoma przyciskami
+      const parent = oldBtn.parentElement;
+      if (parent) {
+        parent.replaceChild(panel, oldBtn);
+        // Dopasuj styl do kontekstu starego przycisku
+        panel.style.position = 'static';
+        panel.style.background = 'transparent';
+        panel.style.boxShadow = 'none';
+        panel.style.padding = '0';
+      }
+    })();
+
     // Upewnij się, że panel i oba przyciski istnieją (w razie kolizji z innymi skryptami)
     (function ensurePanel(){
       const root = document.getElementById('spup-tools') || (()=>{
@@ -88,23 +124,55 @@
         const b=document.createElement('button'); b.id='btnSave'; b.textContent='Zapisz do SharePoint'; root.appendChild(b);
       }
     })();
-  </script>
-  <script>
+
+    // Pomocnicze: czekanie na PDF z aplikacji i budowanie nazwy pliku
+    async function waitForPdfBlob(timeoutMs=15000) {
+      const start = Date.now();
+      while (Date.now() - start < timeoutMs) {
+        const b = window.__lastPdfBlob;
+        if (b instanceof Blob && (b.type || '').toLowerCase() === 'application/pdf' && b.size > 0) return b;
+        await new Promise(r => setTimeout(r, 300));
+      }
+      throw new Error('Brak gotowego pliku PDF z aplikacji (przekroczono czas)');
+    }
+    function sanitize(s){ return String(s||'').normalize('NFKD').replace(/[^\w\s\-\.]/g,'').replace(/\s+/g,'_'); }
+    function buildFileName(meta){
+      const m = meta || window.__lastProtocolMeta || {};
+      const who = sanitize(m.firma || m.imieNazwisko || 'Protokol');
+      const addr = sanitize(m.adres || '');
+      const dt = sanitize((m.date || new Date().toISOString().slice(0,10)));
+      const parts = [who, addr, dt].filter(Boolean);
+      return (parts.join('__') || 'Protokol') + '.pdf';
+    }
+
     (function () {
       const $ = (s) => document.querySelector(s);
-      $('#btnGen')?.addEventListener('click', () => {
-        // Aplikacja Flutter może nasłuchiwać tego zdarzenia i przygotować PDF do window.__lastPdfBlob
-        window.dispatchEvent(new CustomEvent('APP:generatePdf'));
-        alert('Zlecono generowanie PDF w aplikacji.');
+      $('#btnGen')?.addEventListener('click', async () => {
+        try {
+          // Jeśli Flutter nie podstawi PDF, wygeneruj minimalny PDF w przeglądarce
+          if (!(window.__lastPdfBlob instanceof Blob)) {
+            // Podpowiedz meta, jeśli brak
+            const m = window.__lastProtocolMeta || {};
+            window.__lastProtocolMeta = {
+              firma: m.firma ?? prompt('Nazwa firmy lub Imię i nazwisko:', m.firma || m.imieNazwisko || '') || undefined,
+              adres: m.adres ?? prompt('Adres (np. ulica i miasto):', m.adres || '') || undefined,
+              date: m.date ?? new Date().toISOString().slice(0,10)
+            };
+            window.__lastPdfBlob = makeSimplePdf(window.__lastProtocolMeta);
+          }
+          alert('PDF gotowy. Teraz kliknij „Zapisz do SharePoint”.');
+        } catch (e) {
+          console.error(e);
+          alert('Nie udało się wygenerować PDF.');
+        }
       });
+
       $('#btnSave')?.addEventListener('click', async () => {
         try {
           if (!window.SPUP) throw new Error('SPUP nie został załadowany');
+          const blob = await waitForPdfBlob(20000);
           await window.SPUP.ensureM365Ready();
-          // Preferuj blob z aplikacji (jeśli wystawia)
-          const blob = window.__lastPdfBlob || new Blob(['Test PDF'], { type: 'application/pdf' });
-          const ts = new Date().toISOString().replace(/[:.]/g,'-');
-          const name = `Protokol-${ts}.pdf`;
+          const name = buildFileName(window.__lastProtocolMeta);
           const res = await window.SPUP.uploadProtocolPdfDefault(blob, name, { folderPath: '' });
           alert('Wgrano: ' + res.webUrl);
         } catch (e) {

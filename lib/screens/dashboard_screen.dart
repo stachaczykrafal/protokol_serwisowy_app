@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'new_protocol_screen.dart';
 import 'new_commissioning_protocol_screen.dart';
-import 'history_screen.dart';
 import 'offers_screen.dart';
 import 'calendar_screen.dart';
 import '../widgets/connection_status_icon.dart';
@@ -13,103 +12,42 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
-  int _index = 0;
-  bool _isOffice = false;
+class _DashboardScreenState extends State<DashboardScreen> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  final List<_TabDef> _tabs = [
+    _TabDef('Nowy protokół', Icons.add, const NewProtocolScreen()),
+    _TabDef('Uruch.', Icons.play_arrow, const NewCommissioningProtocolScreen()),
+    _TabDef('Kalendarz', Icons.event, const CalendarScreen()),
+    _TabDef('Oferty', Icons.folder_shared, const OffersScreen()),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _loadRole();
+    _tabController = TabController(length: _tabs.length, vsync: this);
   }
 
-  Future<void> _loadRole() async {
-    setState(() {
-      _isOffice = true; // prosty gating – można rozszerzyć o isOffice flag
-    });
-  }
-
-  List<_TabDef> get _tabs {
-    final base = <_TabDef>[
-      _TabDef('Serwis', Icons.build, const NewProtocolScreen()),
-      _TabDef('Uruch.', Icons.play_arrow, const NewCommissioningProtocolScreen()),
-      _TabDef('Kalendarz', Icons.event, const CalendarScreen()),
-      _TabDef('Historia', Icons.history, const HistoryScreen()),
-    ];
-    if (_isOffice) {
-      base.add(_TabDef('Oferty', Icons.folder_shared, const OffersScreen()));
-    }
-    return base;
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final tabs = _tabs;
-    final body = tabs[_index].child;
-    final isWide = MediaQuery.of(context).size.width >= 900;
-
-    final navItems = [
-      for (int i = 0; i < tabs.length; i++)
-        NavigationDestination(icon: Icon(tabs[i].icon), label: tabs[i].label)
-    ];
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(tabs[_index].label),
-        actions: const [ConnectionStatusIcon(), SizedBox(width: 12)],
+        title: const Text('Protokół Serwisowy'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: _tabs.map((tab) => Tab(text: tab.label, icon: Icon(tab.icon))).toList(),
+        ),
       ),
-      body: Row(
-        children: [
-          if (isWide)
-            NavigationRail(
-              selectedIndex: _index,
-              onDestinationSelected: (i) => setState(() => _index = i),
-              labelType: NavigationRailLabelType.all,
-              destinations: [
-                for (final t in tabs)
-                  NavigationRailDestination(
-                    icon: Icon(t.icon),
-                    label: Text(t.label),
-                  )
-              ],
-            ),
-          Expanded(child: body),
-        ],
+      body: TabBarView(
+        controller: _tabController,
+        children: _tabs.map((tab) => tab.screen).toList(),
       ),
-      bottomNavigationBar: isWide
-          ? null
-          : NavigationBar(
-              selectedIndex: _index,
-              onDestinationSelected: (i) => setState(() => _index = i),
-              destinations: navItems,
-            ),
-      drawer: isWide
-          ? null
-          : Drawer(
-              child: ListView(
-                children: [
-                  const DrawerHeader(child: Text('Menu')),
-                  for (int i = 0; i < tabs.length; i++)
-                    ListTile(
-                      leading: Icon(tabs[i].icon),
-                      title: Text(tabs[i].label),
-                      selected: i == _index,
-                      onTap: () {
-                        setState(() => _index = i);
-                        Navigator.pop(context);
-                      },
-                    ),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(Icons.logout),
-                    title: const Text('Wyloguj anon.'),
-                    onTap: () async {
-                      if (mounted) Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-            ),
     );
   }
 }
@@ -117,6 +55,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 class _TabDef {
   final String label;
   final IconData icon;
-  final Widget child;
-  _TabDef(this.label, this.icon, this.child);
+  final Widget screen;
+
+  const _TabDef(this.label, this.icon, this.screen);
 }

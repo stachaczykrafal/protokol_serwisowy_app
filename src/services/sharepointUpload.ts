@@ -68,6 +68,35 @@ async function initPcaOnce() {
   await _pcaInitPromise;
 }
 
+// Globalny patch: automatyczna initialize() przed kluczowymi metodami
+function patchMsalAutoInitPrototype() {
+  const cls: any = (msal as any).PublicClientApplication;
+  const proto: any = cls?.prototype;
+  if (!proto || proto.__spupPatched) return;
+  const ensure = async function(this: any) {
+    if (!this.__spupInitPromise) this.__spupInitPromise = this.initialize();
+    return this.__spupInitPromise;
+  };
+  const wrap = (name: string) => {
+    const orig = proto[name];
+    if (typeof orig !== 'function') return;
+    proto[name] = async function(...args: any[]) {
+      await ensure.call(this);
+      return orig.apply(this, args);
+    };
+  };
+  ['handleRedirectPromise','loginPopup','loginRedirect','acquireTokenSilent','acquireTokenPopup','acquireTokenRedirect','getAllAccounts']
+    .forEach(wrap);
+  proto.__spupPatched = true;
+}
+
+// Udostępnij MSAL globalnie i włącz patch
+declare global { interface Window { SPUP?: any; msal?: any; } }
+if (typeof window !== 'undefined') {
+  (window as any).msal = (window as any).msal || msal;
+  patchMsalAutoInitPrototype();
+}
+
 async function processRedirectOnce() {
   try {
     const p = getPca();
@@ -346,57 +375,6 @@ export async function ensureM365Ready() {
     return info;
   } catch (e) {
     throw e;
-  }
-}
-
-// Globalny patch: metody MSAL będą czekać na initialize() automatycznie, nawet jeśli wywołane z innego miejsca (np. z Darta)
-function patchMsalAutoInitPrototype() {
-  const cls: any = (msal as any).PublicClientApplication;
-  const proto: any = cls?.prototype;
-  if (!proto || proto.__spupPatched) return;
-  const ensure = async function(this: any) {
-    if (!this.__spupInitPromise) this.__spupInitPromise = this.initialize();
-    return this.__spupInitPromise;
-  };
-  const wrap = (name: string) => {
-    const orig = proto[name];
-    if (typeof orig !== 'function') return;
-    proto[name] = async function(...args: any[]) {
-      await ensure.call(this);
-      return orig.apply(this, args);
-    };
-  };
-  ['handleRedirectPromise','loginPopup','loginRedirect','acquireTokenSilent','acquireTokenPopup','acquireTokenRedirect','getAllAccounts']
-    .forEach(wrap);
-  proto.__spupPatched = true;
-}
-
-// Udostępnij moduł MSAL globalnie i włącz patch
-declare global { interface Window { SPUP?: any; msal?: any; } }
-if (typeof window !== 'undefined') {
-  (window as any).msal = (window as any).msal || msal;
-  patchMsalAutoInitPrototype();
-}
-
-function attachGlobal(reason: string) {
-  if (typeof window === 'undefined') return;
-  const api = {
-    AAD,
-    DEFAULT_SP,
-    ensureLogin,
-    ensureM365Ready,
-    uploadProtocolPdf,
-    uploadProtocolPdfDefault,
-    makeUploadOptions,
-    testSharePointAccess,
-    rebind: () => attachGlobal('manual')
-  };
-  window.SPUP = { ...(window.SPUP || {}), ...api, __attachedAt: new Date().toISOString(), __reason: reason };
-  // Eager init MSAL to avoid "uninitialized_public_client_application"
-  initPcaOnce().catch(err => console.warn('[SPUP] MSAL initialize() failed (will retry on demand):', err));
-  // Diagnostyka w konsoli
-  if (!('__silent' in window.SPUP)) {
-    console.info('[SPUP] attached (reason=' + reason + ')', window.SPUP);
   }
 }
 

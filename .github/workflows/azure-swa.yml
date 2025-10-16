@@ -39,6 +39,17 @@ jobs:
       - name: Bundle MSAL/Graph helper into build/web
         run: npx esbuild src/services/sharepointUpload.ts --bundle --format=iife --outfile=build/web/msal-sharepoint.js
 
+      - name: Generate SWA config with security headers
+        run: |
+          cat > build/web/staticwebapp.config.json << 'EOF'
+          {
+            "globalHeaders": {
+              "cache-control": "public, max-age=3600, must-revalidate",
+              "x-content-type-options": "nosniff"
+            }
+          }
+          EOF
+
       - name: Disable Flutter service worker (cache bust)
         run: rm -f build/web/flutter_service_worker.js
 

@@ -90,6 +90,20 @@
     // API dla Fluttera na ustawienie metadanych protokołu
     window.setProtocolMeta = function(meta){ window.__lastProtocolMeta = meta || {}; };
 
+    // Pomocnicze: budowanie nowego panelu z handlerami
+    function buildPanel() {
+      const wrap = document.createElement('div');
+      wrap.style.display = 'flex';
+      wrap.style.gap = '8px';
+      const b1 = document.createElement('button'); b1.textContent = 'Generuj PDF'; b1.id = 'btnGen_clone';
+      const b2 = document.createElement('button'); b2.textContent = 'Zapisz do SharePoint'; b2.id = 'btnSave_clone';
+      wrap.appendChild(b1); wrap.appendChild(b2);
+      // handlery
+      b1.addEventListener('click', () => document.getElementById('btnGen')?.dispatchEvent(new Event('click')));
+      b2.addEventListener('click', () => document.getElementById('btnSave')?.dispatchEvent(new Event('click')));
+      return wrap;
+    }
+
     // Spróbuj wstawić 2 przyciski w miejsce "starego" przycisku (jeśli to zwykły element DOM)
     (function mountInOldSlot(){
       const findOldBtn = () => {
@@ -97,19 +111,14 @@
         return nodes.find(n => /pdf|zapisz|protoko/i.test(n.textContent || ''));
       };
       const oldBtn = findOldBtn();
-      if (!oldBtn) return; // jeśli nie znaleziono, zostaje panel pływający
-      const panel = document.getElementById('spup-tools');
-      if (!panel) return;
-      // Podmień stary przycisk panelem z dwoma przyciskami
+      if (!oldBtn) return; // fallback: panel pływający
       const parent = oldBtn.parentElement;
-      if (parent) {
-        parent.replaceChild(panel, oldBtn);
-        // Dopasuj styl do kontekstu starego przycisku
-        panel.style.position = 'static';
-        panel.style.background = 'transparent';
-        panel.style.boxShadow = 'none';
-        panel.style.padding = '0';
-      }
+      if (!parent) return;
+      const localPanel = buildPanel();
+      parent.replaceChild(localPanel, oldBtn);
+      // ukryj panel pływający, aby nie dublować przycisków
+      const floatPanel = document.getElementById('spup-tools');
+      if (floatPanel) floatPanel.style.display = 'none';
     })();
 
     // Upewnij się, że panel i oba przyciski istnieją (w razie kolizji z innymi skryptami)

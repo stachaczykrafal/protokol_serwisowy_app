@@ -350,7 +350,13 @@ export async function ensureM365Ready() {
 }
 
 // === P E W N Y   G L O B A L N Y   E K S P O R T ===
-declare global { interface Window { SPUP?: any; } }
+declare global { interface Window { SPUP?: any; msal?: any; } }
+
+// Wystaw moduł msal jako window.msal (dla kodu oczekującego globalnego MSAL)
+if (typeof window !== 'undefined') {
+  // nie nadpisuj, jeśli już istnieje (np. z CDN)
+  (window as any).msal = (window as any).msal || msal;
+}
 
 function attachGlobal(reason: string) {
   if (typeof window === 'undefined') return;

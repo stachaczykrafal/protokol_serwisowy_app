@@ -5,6 +5,7 @@ import 'package:msal_js/msal_js.dart' as msal;
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:js_util' as js_util;
+import 'dart:js' as js;
 
 class M365Config {
   // Pozwala nadpisać podczas build:

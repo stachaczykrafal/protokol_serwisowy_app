@@ -1,9 +1,186 @@
 (() => {
   var __defProp = Object.defineProperty;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __esm = (fn, res) => function __init() {
+    return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+  };
   var __export = (target, all) => {
     for (var name3 in all)
       __defProp(target, name3, { get: all[name3], enumerable: true });
   };
+
+  // node_modules/@azure/msal-browser/dist/telemetry/BrowserPerformanceMeasurement.mjs
+  var BrowserPerformanceMeasurement_exports = {};
+  __export(BrowserPerformanceMeasurement_exports, {
+    BrowserPerformanceMeasurement: () => BrowserPerformanceMeasurement
+  });
+  var BrowserPerformanceMeasurement;
+  var init_BrowserPerformanceMeasurement = __esm({
+    "node_modules/@azure/msal-browser/dist/telemetry/BrowserPerformanceMeasurement.mjs"() {
+      "use strict";
+      BrowserPerformanceMeasurement = class _BrowserPerformanceMeasurement {
+        constructor(name3, correlationId) {
+          this.correlationId = correlationId;
+          this.measureName = _BrowserPerformanceMeasurement.makeMeasureName(name3, correlationId);
+          this.startMark = _BrowserPerformanceMeasurement.makeStartMark(name3, correlationId);
+          this.endMark = _BrowserPerformanceMeasurement.makeEndMark(name3, correlationId);
+        }
+        static makeMeasureName(name3, correlationId) {
+          return `msal.measure.${name3}.${correlationId}`;
+        }
+        static makeStartMark(name3, correlationId) {
+          return `msal.start.${name3}.${correlationId}`;
+        }
+        static makeEndMark(name3, correlationId) {
+          return `msal.end.${name3}.${correlationId}`;
+        }
+        static supportsBrowserPerformance() {
+          return typeof window !== "undefined" && typeof window.performance !== "undefined" && typeof window.performance.mark === "function" && typeof window.performance.measure === "function" && typeof window.performance.clearMarks === "function" && typeof window.performance.clearMeasures === "function" && typeof window.performance.getEntriesByName === "function";
+        }
+        /**
+         * Flush browser marks and measurements.
+         * @param {string} correlationId
+         * @param {SubMeasurement} measurements
+         */
+        static flushMeasurements(correlationId, measurements) {
+          if (_BrowserPerformanceMeasurement.supportsBrowserPerformance()) {
+            try {
+              measurements.forEach((measurement) => {
+                const measureName = _BrowserPerformanceMeasurement.makeMeasureName(measurement.name, correlationId);
+                const entriesForMeasurement = window.performance.getEntriesByName(measureName, "measure");
+                if (entriesForMeasurement.length > 0) {
+                  window.performance.clearMeasures(measureName);
+                  window.performance.clearMarks(_BrowserPerformanceMeasurement.makeStartMark(measureName, correlationId));
+                  window.performance.clearMarks(_BrowserPerformanceMeasurement.makeEndMark(measureName, correlationId));
+                }
+              });
+            } catch (e) {
+            }
+          }
+        }
+        startMeasurement() {
+          if (_BrowserPerformanceMeasurement.supportsBrowserPerformance()) {
+            try {
+              window.performance.mark(this.startMark);
+            } catch (e) {
+            }
+          }
+        }
+        endMeasurement() {
+          if (_BrowserPerformanceMeasurement.supportsBrowserPerformance()) {
+            try {
+              window.performance.mark(this.endMark);
+              window.performance.measure(this.measureName, this.startMark, this.endMark);
+            } catch (e) {
+            }
+          }
+        }
+        flushMeasurement() {
+          if (_BrowserPerformanceMeasurement.supportsBrowserPerformance()) {
+            try {
+              const entriesForMeasurement = window.performance.getEntriesByName(this.measureName, "measure");
+              if (entriesForMeasurement.length > 0) {
+                const durationMs = entriesForMeasurement[0].duration;
+                window.performance.clearMeasures(this.measureName);
+                window.performance.clearMarks(this.startMark);
+                window.performance.clearMarks(this.endMark);
+                return durationMs;
+              }
+            } catch (e) {
+            }
+          }
+          return null;
+        }
+      };
+    }
+  });
+
+  // node_modules/@azure/msal-browser/dist/index.mjs
+  var dist_exports = {};
+  __export(dist_exports, {
+    AccountEntity: () => AccountEntity,
+    ApiId: () => ApiId,
+    AuthError: () => AuthError,
+    AuthErrorCodes: () => AuthErrorCodes_exports,
+    AuthErrorMessage: () => AuthErrorMessage,
+    AuthenticationHeaderParser: () => AuthenticationHeaderParser,
+    AuthenticationScheme: () => AuthenticationScheme,
+    AzureCloudInstance: () => AzureCloudInstance,
+    BrowserAuthError: () => BrowserAuthError,
+    BrowserAuthErrorCodes: () => BrowserAuthErrorCodes_exports,
+    BrowserAuthErrorMessage: () => BrowserAuthErrorMessage,
+    BrowserCacheLocation: () => BrowserCacheLocation,
+    BrowserConfigurationAuthError: () => BrowserConfigurationAuthError,
+    BrowserConfigurationAuthErrorCodes: () => BrowserConfigurationAuthErrorCodes_exports,
+    BrowserConfigurationAuthErrorMessage: () => BrowserConfigurationAuthErrorMessage,
+    BrowserPerformanceClient: () => BrowserPerformanceClient,
+    BrowserPerformanceMeasurement: () => BrowserPerformanceMeasurement,
+    BrowserUtils: () => BrowserUtils_exports,
+    CacheLookupPolicy: () => CacheLookupPolicy,
+    ClientAuthError: () => ClientAuthError,
+    ClientAuthErrorCodes: () => ClientAuthErrorCodes_exports,
+    ClientAuthErrorMessage: () => ClientAuthErrorMessage,
+    ClientConfigurationError: () => ClientConfigurationError,
+    ClientConfigurationErrorCodes: () => ClientConfigurationErrorCodes_exports,
+    ClientConfigurationErrorMessage: () => ClientConfigurationErrorMessage,
+    DEFAULT_IFRAME_TIMEOUT_MS: () => DEFAULT_IFRAME_TIMEOUT_MS,
+    EventHandler: () => EventHandler,
+    EventMessageUtils: () => EventMessageUtils,
+    EventType: () => EventType,
+    InteractionRequiredAuthError: () => InteractionRequiredAuthError,
+    InteractionRequiredAuthErrorCodes: () => InteractionRequiredAuthErrorCodes_exports,
+    InteractionRequiredAuthErrorMessage: () => InteractionRequiredAuthErrorMessage,
+    InteractionStatus: () => InteractionStatus,
+    InteractionType: () => InteractionType,
+    JsonWebTokenTypes: () => JsonWebTokenTypes,
+    LocalStorage: () => LocalStorage,
+    LogLevel: () => LogLevel,
+    Logger: () => Logger,
+    MemoryStorage: () => MemoryStorage,
+    NavigationClient: () => NavigationClient,
+    OIDC_DEFAULT_SCOPES: () => OIDC_DEFAULT_SCOPES,
+    PerformanceEvents: () => PerformanceEvents,
+    PromptValue: () => PromptValue,
+    ProtocolMode: () => ProtocolMode,
+    PublicClientApplication: () => PublicClientApplication,
+    PublicClientNext: () => PublicClientNext,
+    ServerError: () => ServerError,
+    ServerResponseType: () => ServerResponseType,
+    SessionStorage: () => SessionStorage,
+    SignedHttpRequest: () => SignedHttpRequest,
+    StringUtils: () => StringUtils,
+    StubPerformanceClient: () => StubPerformanceClient,
+    UrlString: () => UrlString,
+    WrapperSKU: () => WrapperSKU,
+    createNestablePublicClientApplication: () => createNestablePublicClientApplication,
+    createStandardPublicClientApplication: () => createStandardPublicClientApplication,
+    isPlatformBrokerAvailable: () => isPlatformBrokerAvailable,
+    stubbedPublicClientApplication: () => stubbedPublicClientApplication,
+    version: () => version2
+  });
+
+  // node_modules/@azure/msal-browser/dist/utils/BrowserUtils.mjs
+  var BrowserUtils_exports = {};
+  __export(BrowserUtils_exports, {
+    addClientCapabilitiesToClaims: () => addClientCapabilitiesToClaims2,
+    blockAPICallsBeforeInitialize: () => blockAPICallsBeforeInitialize,
+    blockAcquireTokenInPopups: () => blockAcquireTokenInPopups,
+    blockNonBrowserEnvironment: () => blockNonBrowserEnvironment,
+    blockRedirectInIframe: () => blockRedirectInIframe,
+    blockReloadInHiddenIframes: () => blockReloadInHiddenIframes,
+    clearHash: () => clearHash,
+    createGuid: () => createGuid,
+    getCurrentUri: () => getCurrentUri,
+    getHomepage: () => getHomepage,
+    invoke: () => invoke,
+    invokeAsync: () => invokeAsync,
+    isInIframe: () => isInIframe,
+    isInPopup: () => isInPopup,
+    preconnect: () => preconnect,
+    preflightCheck: () => preflightCheck,
+    redirectPreflightCheck: () => redirectPreflightCheck,
+    replaceHash: () => replaceHash
+  });
 
   // node_modules/@azure/msal-common/dist/utils/Constants.mjs
   var Constants = {
@@ -3163,6 +3340,32 @@
     InProgress: 1,
     Completed: 2
   };
+  var IntFields = /* @__PURE__ */ new Set([
+    "accessTokenSize",
+    "durationMs",
+    "idTokenSize",
+    "matsSilentStatus",
+    "matsHttpStatus",
+    "refreshTokenSize",
+    "queuedTimeMs",
+    "startTimeMs",
+    "status",
+    "multiMatchedAT",
+    "multiMatchedID",
+    "multiMatchedRT",
+    "unencryptedCacheCount",
+    "encryptedCacheExpiredCount",
+    "oldAccountCount",
+    "oldAccessCount",
+    "oldIdCount",
+    "oldRefreshCount",
+    "currAccountCount",
+    "currAccessCount",
+    "currIdCount",
+    "currRefreshCount",
+    "expiredCacheRemovedCount",
+    "upgradedCacheCount"
+  ]);
 
   // node_modules/@azure/msal-common/dist/telemetry/performance/StubPerformanceClient.mjs
   var StubPerformanceMeasurement = class {
@@ -6373,6 +6576,51 @@ ${serverError}`);
     return account2.loginHint || account2.idTokenClaims?.login_hint || null;
   }
 
+  // node_modules/@azure/msal-common/dist/request/AuthenticationHeaderParser.mjs
+  var AuthenticationHeaderParser = class {
+    constructor(headers) {
+      this.headers = headers;
+    }
+    /**
+     * This method parses the SHR nonce value out of either the Authentication-Info or WWW-Authenticate authentication headers.
+     * @returns
+     */
+    getShrNonce() {
+      const authenticationInfo = this.headers[HeaderNames.AuthenticationInfo];
+      if (authenticationInfo) {
+        const authenticationInfoChallenges = this.parseChallenges(authenticationInfo);
+        if (authenticationInfoChallenges.nextnonce) {
+          return authenticationInfoChallenges.nextnonce;
+        }
+        throw createClientConfigurationError(invalidAuthenticationHeader);
+      }
+      const wwwAuthenticate = this.headers[HeaderNames.WWWAuthenticate];
+      if (wwwAuthenticate) {
+        const wwwAuthenticateChallenges = this.parseChallenges(wwwAuthenticate);
+        if (wwwAuthenticateChallenges.nonce) {
+          return wwwAuthenticateChallenges.nonce;
+        }
+        throw createClientConfigurationError(invalidAuthenticationHeader);
+      }
+      throw createClientConfigurationError(missingNonceAuthenticationHeader);
+    }
+    /**
+     * Parses an HTTP header's challenge set into a key/value map.
+     * @param header
+     * @returns
+     */
+    parseChallenges(header) {
+      const schemeSeparator = header.indexOf(" ");
+      const challenges = header.substr(schemeSeparator + 1).split(",");
+      const challengeMap = {};
+      challenges.forEach((challenge) => {
+        const [key, value] = challenge.split("=");
+        challengeMap[key] = unescape(value.replace(/['"]+/g, Constants.EMPTY_STRING));
+      });
+      return challengeMap;
+    }
+  };
+
   // node_modules/@azure/msal-common/dist/telemetry/server/ServerTelemetryManager.mjs
   var skuGroupSeparator = ",";
   var skuValueSeparator = "|";
@@ -6651,7 +6899,603 @@ ${serverError}`);
     }
   };
 
+  // node_modules/@azure/msal-common/dist/telemetry/performance/PerformanceClient.mjs
+  function startContext(event, abbreviations, stack) {
+    if (!stack) {
+      return;
+    }
+    stack.push({
+      name: abbreviations.get(event.name) || event.name
+    });
+  }
+  function endContext(event, abbreviations, stack, error) {
+    if (!stack?.length) {
+      return;
+    }
+    const peek = (stack2) => {
+      return stack2.length ? stack2[stack2.length - 1] : void 0;
+    };
+    const abbrEventName = abbreviations.get(event.name) || event.name;
+    const top = peek(stack);
+    if (top?.name !== abbrEventName) {
+      return;
+    }
+    const current = stack?.pop();
+    if (!current) {
+      return;
+    }
+    const errorCode = error instanceof AuthError ? error.errorCode : error instanceof Error ? error.name : void 0;
+    const subErr = error instanceof AuthError ? error.subError : void 0;
+    if (errorCode && current.childErr !== errorCode) {
+      current.err = errorCode;
+      if (subErr) {
+        current.subErr = subErr;
+      }
+    }
+    delete current.name;
+    delete current.childErr;
+    const context = {
+      ...current,
+      dur: event.durationMs
+    };
+    if (!event.success) {
+      context.fail = 1;
+    }
+    const parent = peek(stack);
+    if (!parent) {
+      return { [abbrEventName]: context };
+    }
+    if (errorCode) {
+      parent.childErr = errorCode;
+    }
+    let childName;
+    if (!parent[abbrEventName]) {
+      childName = abbrEventName;
+    } else {
+      const siblings = Object.keys(parent).filter((key) => key.startsWith(abbrEventName)).length;
+      childName = `${abbrEventName}_${siblings + 1}`;
+    }
+    parent[childName] = context;
+    return parent;
+  }
+  function addError(error, logger, event, stackMaxSize = 5) {
+    if (!(error instanceof Error)) {
+      logger.trace("PerformanceClient.addErrorStack: Input error is not instance of Error", event.correlationId);
+      return;
+    } else if (error instanceof AuthError) {
+      event.errorCode = error.errorCode;
+      event.subErrorCode = error.subError;
+      if (error instanceof ServerError || error instanceof InteractionRequiredAuthError) {
+        event.serverErrorNo = error.errorNo;
+      }
+      return;
+    } else if (error instanceof CacheError) {
+      event.errorCode = error.errorCode;
+      return;
+    } else if (event.errorStack?.length) {
+      logger.trace("PerformanceClient.addErrorStack: Stack already exist", event.correlationId);
+      return;
+    } else if (!error.stack?.length) {
+      logger.trace("PerformanceClient.addErrorStack: Input stack is empty", event.correlationId);
+      return;
+    }
+    if (error.stack) {
+      event.errorStack = compactStack(error.stack, stackMaxSize);
+    }
+    event.errorName = error.name;
+  }
+  function compactStack(stack, stackMaxSize) {
+    if (stackMaxSize < 0) {
+      return [];
+    }
+    const stackArr = stack.split("\n") || [];
+    const res = [];
+    const firstLine = stackArr[0];
+    if (firstLine.startsWith("TypeError: Cannot read property") || firstLine.startsWith("TypeError: Cannot read properties of") || firstLine.startsWith("TypeError: Cannot set property") || firstLine.startsWith("TypeError: Cannot set properties of") || firstLine.endsWith("is not a function")) {
+      res.push(compactStackLine(firstLine));
+    } else if (firstLine.startsWith("SyntaxError") || firstLine.startsWith("TypeError")) {
+      res.push(compactStackLine(
+        // Example: SyntaxError: Unexpected token 'e', "test" is not valid JSON -> SyntaxError: Unexpected token <redacted>, <redacted> is not valid JSON
+        firstLine.replace(/['].*[']|["].*["]/g, "<redacted>")
+      ));
+    }
+    for (let ix = 1; ix < stackArr.length; ix++) {
+      if (res.length >= stackMaxSize) {
+        break;
+      }
+      const line = stackArr[ix];
+      res.push(compactStackLine(line));
+    }
+    return res;
+  }
+  function compactStackLine(line) {
+    const filePathIx = line.lastIndexOf(" ") + 1;
+    if (filePathIx < 1) {
+      return line;
+    }
+    const filePath = line.substring(filePathIx);
+    let fileNameIx = filePath.lastIndexOf("/");
+    fileNameIx = fileNameIx < 0 ? filePath.lastIndexOf("\\") : fileNameIx;
+    if (fileNameIx >= 0) {
+      return (line.substring(0, filePathIx) + "(" + filePath.substring(fileNameIx + 1) + (filePath.charAt(filePath.length - 1) === ")" ? "" : ")")).trimStart();
+    }
+    return line.trimStart();
+  }
+  function getAccountType(account2) {
+    const idTokenClaims = account2?.idTokenClaims;
+    if (idTokenClaims?.tfp || idTokenClaims?.acr) {
+      return "B2C";
+    }
+    if (!idTokenClaims?.tid) {
+      return void 0;
+    } else if (idTokenClaims?.tid === "9188040d-6c67-4c5b-b112-36a304b66dad") {
+      return "MSA";
+    }
+    return "AAD";
+  }
+  var PerformanceClient = class {
+    /**
+     * Creates an instance of PerformanceClient,
+     * an abstract class containing core performance telemetry logic.
+     *
+     * @constructor
+     * @param {string} clientId Client ID of the application
+     * @param {string} authority Authority used by the application
+     * @param {Logger} logger Logger used by the application
+     * @param {string} libraryName Name of the library
+     * @param {string} libraryVersion Version of the library
+     * @param {ApplicationTelemetry} applicationTelemetry application name and version
+     * @param {Set<String>} intFields integer fields to be truncated
+     * @param {Map<string, string>} abbreviations event name abbreviations
+     */
+    constructor(clientId, authority, logger, libraryName, libraryVersion, applicationTelemetry, intFields, abbreviations) {
+      this.authority = authority;
+      this.libraryName = libraryName;
+      this.libraryVersion = libraryVersion;
+      this.applicationTelemetry = applicationTelemetry;
+      this.clientId = clientId;
+      this.logger = logger;
+      this.callbacks = /* @__PURE__ */ new Map();
+      this.eventsByCorrelationId = /* @__PURE__ */ new Map();
+      this.eventStack = /* @__PURE__ */ new Map();
+      this.queueMeasurements = /* @__PURE__ */ new Map();
+      this.preQueueTimeByCorrelationId = /* @__PURE__ */ new Map();
+      this.intFields = intFields || /* @__PURE__ */ new Set();
+      for (const item of IntFields) {
+        this.intFields.add(item);
+      }
+      this.abbreviations = abbreviations || /* @__PURE__ */ new Map();
+      for (const [key, value] of PerformanceEventAbbreviations) {
+        this.abbreviations.set(key, value);
+      }
+    }
+    /**
+     * Starts and returns an platform-specific implementation of IPerformanceMeasurement.
+     * Note: this function can be changed to abstract at the next major version bump.
+     *
+     * @param {string} measureName
+     * @param {string} correlationId
+     * @returns {IPerformanceMeasurement}
+     * @deprecated This method will be removed in the next major version
+     */
+    startPerformanceMeasurement(measureName, correlationId) {
+      return {};
+    }
+    /**
+     * Gets map of pre-queue times by correlation Id
+     *
+     * @param {PerformanceEvents} eventName
+     * @param {string} correlationId
+     * @returns {number}
+     */
+    getPreQueueTime(eventName, correlationId) {
+      const preQueueEvent = this.preQueueTimeByCorrelationId.get(correlationId);
+      if (!preQueueEvent) {
+        this.logger.trace(`PerformanceClient.getPreQueueTime: no pre-queue times found for correlationId: ${correlationId}, unable to add queue measurement`);
+        return;
+      } else if (preQueueEvent.name !== eventName) {
+        this.logger.trace(`PerformanceClient.getPreQueueTime: no pre-queue time found for ${eventName}, unable to add queue measurement`);
+        return;
+      }
+      return preQueueEvent.time;
+    }
+    /**
+     * Calculates the difference between current time and time when function was queued.
+     * Note: It is possible to have 0 as the queue time if the current time and the queued time was the same.
+     *
+     * @param {number} preQueueTime
+     * @param {number} currentTime
+     * @returns {number}
+     */
+    calculateQueuedTime(preQueueTime, currentTime) {
+      if (preQueueTime < 1) {
+        this.logger.trace(`PerformanceClient: preQueueTime should be a positive integer and not ${preQueueTime}`);
+        return 0;
+      }
+      if (currentTime < 1) {
+        this.logger.trace(`PerformanceClient: currentTime should be a positive integer and not ${currentTime}`);
+        return 0;
+      }
+      if (currentTime < preQueueTime) {
+        this.logger.trace("PerformanceClient: currentTime is less than preQueueTime, check how time is being retrieved");
+        return 0;
+      }
+      return currentTime - preQueueTime;
+    }
+    /**
+     * Adds queue measurement time to QueueMeasurements array for given correlation ID.
+     *
+     * @param {PerformanceEvents} eventName
+     * @param {?string} correlationId
+     * @param {?number} queueTime
+     * @param {?boolean} manuallyCompleted - indicator for manually completed queue measurements
+     * @returns
+     */
+    addQueueMeasurement(eventName, correlationId, queueTime, manuallyCompleted) {
+      if (!correlationId) {
+        this.logger.trace(`PerformanceClient.addQueueMeasurement: correlationId not provided for ${eventName}, cannot add queue measurement`);
+        return;
+      }
+      if (queueTime === 0) {
+        this.logger.trace(`PerformanceClient.addQueueMeasurement: queue time provided for ${eventName} is ${queueTime}`);
+      } else if (!queueTime) {
+        this.logger.trace(`PerformanceClient.addQueueMeasurement: no queue time provided for ${eventName}`);
+        return;
+      }
+      const queueMeasurement = {
+        eventName,
+        // Always default queue time to 0 for manually completed (improperly instrumented)
+        queueTime: manuallyCompleted ? 0 : queueTime,
+        manuallyCompleted
+      };
+      const existingMeasurements = this.queueMeasurements.get(correlationId);
+      if (existingMeasurements) {
+        existingMeasurements.push(queueMeasurement);
+        this.queueMeasurements.set(correlationId, existingMeasurements);
+      } else {
+        this.logger.trace(`PerformanceClient.addQueueMeasurement: adding correlationId ${correlationId} to queue measurements`);
+        const measurementArray = [queueMeasurement];
+        this.queueMeasurements.set(correlationId, measurementArray);
+      }
+      this.preQueueTimeByCorrelationId.delete(correlationId);
+    }
+    /**
+     * Starts measuring performance for a given operation. Returns a function that should be used to end the measurement.
+     *
+     * @param {PerformanceEvents} measureName
+     * @param {?string} [correlationId]
+     * @returns {InProgressPerformanceEvent}
+     */
+    startMeasurement(measureName, correlationId) {
+      const eventCorrelationId = correlationId || this.generateId();
+      if (!correlationId) {
+        this.logger.info(`PerformanceClient: No correlation id provided for ${measureName}, generating`, eventCorrelationId);
+      }
+      this.logger.trace(`PerformanceClient: Performance measurement started for ${measureName}`, eventCorrelationId);
+      const inProgressEvent = {
+        eventId: this.generateId(),
+        status: PerformanceEventStatus.InProgress,
+        authority: this.authority,
+        libraryName: this.libraryName,
+        libraryVersion: this.libraryVersion,
+        clientId: this.clientId,
+        name: measureName,
+        startTimeMs: Date.now(),
+        correlationId: eventCorrelationId,
+        appName: this.applicationTelemetry?.appName,
+        appVersion: this.applicationTelemetry?.appVersion
+      };
+      this.cacheEventByCorrelationId(inProgressEvent);
+      startContext(inProgressEvent, this.abbreviations, this.eventStack.get(eventCorrelationId));
+      return {
+        end: (event, error, account2) => {
+          return this.endMeasurement({
+            // Initial set of event properties
+            ...inProgressEvent,
+            // Properties set when event ends
+            ...event
+          }, error, account2);
+        },
+        discard: () => {
+          return this.discardMeasurements(inProgressEvent.correlationId);
+        },
+        add: (fields) => {
+          return this.addFields(fields, inProgressEvent.correlationId);
+        },
+        increment: (fields) => {
+          return this.incrementFields(fields, inProgressEvent.correlationId);
+        },
+        event: inProgressEvent,
+        measurement: new StubPerformanceMeasurement()
+      };
+    }
+    /**
+     * Stops measuring the performance for an operation. Should only be called directly by PerformanceClient classes,
+     * as consumers should instead use the function returned by startMeasurement.
+     * Adds a new field named as "[event name]DurationMs" for sub-measurements, completes and emits an event
+     * otherwise.
+     *
+     * @param {PerformanceEvent} event
+     * @param {unknown} error
+     * @param {AccountInfo?} account
+     * @returns {(PerformanceEvent | null)}
+     */
+    endMeasurement(event, error, account2) {
+      const rootEvent = this.eventsByCorrelationId.get(event.correlationId);
+      if (!rootEvent) {
+        this.logger.trace(`PerformanceClient: Measurement not found for ${event.eventId}`, event.correlationId);
+        return null;
+      }
+      const isRoot = event.eventId === rootEvent.eventId;
+      let queueInfo = {
+        totalQueueTime: 0,
+        totalQueueCount: 0,
+        manuallyCompletedCount: 0
+      };
+      event.durationMs = Math.round(event.durationMs || this.getDurationMs(event.startTimeMs));
+      const context = JSON.stringify(endContext(event, this.abbreviations, this.eventStack.get(rootEvent.correlationId), error));
+      if (isRoot) {
+        queueInfo = this.getQueueInfo(event.correlationId);
+        this.discardMeasurements(rootEvent.correlationId);
+      } else {
+        rootEvent.incompleteSubMeasurements?.delete(event.eventId);
+      }
+      this.logger.trace(`PerformanceClient: Performance measurement ended for ${event.name}: ${event.durationMs} ms`, event.correlationId);
+      if (error) {
+        addError(error, this.logger, rootEvent);
+      }
+      if (!isRoot) {
+        rootEvent[event.name + "DurationMs"] = Math.floor(event.durationMs);
+        return { ...rootEvent };
+      }
+      if (isRoot && !error && (rootEvent.errorCode || rootEvent.subErrorCode)) {
+        this.logger.trace(`PerformanceClient: Remove error and sub-error codes for root event ${event.name} as intermediate error was successfully handled`, event.correlationId);
+        rootEvent.errorCode = void 0;
+        rootEvent.subErrorCode = void 0;
+      }
+      let finalEvent = { ...rootEvent, ...event };
+      let incompleteSubsCount = 0;
+      finalEvent.incompleteSubMeasurements?.forEach((subMeasurement) => {
+        this.logger.trace(`PerformanceClient: Incomplete submeasurement ${subMeasurement.name} found for ${event.name}`, finalEvent.correlationId);
+        incompleteSubsCount++;
+      });
+      finalEvent.incompleteSubMeasurements = void 0;
+      finalEvent = {
+        ...finalEvent,
+        queuedTimeMs: queueInfo.totalQueueTime,
+        queuedCount: queueInfo.totalQueueCount,
+        queuedManuallyCompletedCount: queueInfo.manuallyCompletedCount,
+        status: PerformanceEventStatus.Completed,
+        incompleteSubsCount,
+        context
+      };
+      if (account2) {
+        finalEvent.accountType = getAccountType(account2);
+        finalEvent.dataBoundary = account2.dataBoundary;
+      }
+      this.truncateIntegralFields(finalEvent);
+      this.emitEvents([finalEvent], event.correlationId);
+      return finalEvent;
+    }
+    /**
+     * Saves extra information to be emitted when the measurements are flushed
+     * @param fields
+     * @param correlationId
+     */
+    addFields(fields, correlationId) {
+      this.logger.trace("PerformanceClient: Updating static fields");
+      const event = this.eventsByCorrelationId.get(correlationId);
+      if (event) {
+        this.eventsByCorrelationId.set(correlationId, {
+          ...event,
+          ...fields
+        });
+      } else {
+        this.logger.trace("PerformanceClient: Event not found for", correlationId);
+      }
+    }
+    /**
+     * Increment counters to be emitted when the measurements are flushed
+     * @param fields {string[]}
+     * @param correlationId {string} correlation identifier
+     */
+    incrementFields(fields, correlationId) {
+      this.logger.trace("PerformanceClient: Updating counters");
+      const event = this.eventsByCorrelationId.get(correlationId);
+      if (event) {
+        for (const counter in fields) {
+          if (!event.hasOwnProperty(counter)) {
+            event[counter] = 0;
+          } else if (isNaN(Number(event[counter]))) {
+            return;
+          }
+          event[counter] += fields[counter];
+        }
+      } else {
+        this.logger.trace("PerformanceClient: Event not found for", correlationId);
+      }
+    }
+    /**
+     * Upserts event into event cache.
+     * First key is the correlation id, second key is the event id.
+     * Allows for events to be grouped by correlation id,
+     * and to easily allow for properties on them to be updated.
+     *
+     * @private
+     * @param {PerformanceEvent} event
+     */
+    cacheEventByCorrelationId(event) {
+      const rootEvent = this.eventsByCorrelationId.get(event.correlationId);
+      if (rootEvent) {
+        this.logger.trace(`PerformanceClient: Performance measurement for ${event.name} added/updated`, event.correlationId);
+        rootEvent.incompleteSubMeasurements = rootEvent.incompleteSubMeasurements || /* @__PURE__ */ new Map();
+        rootEvent.incompleteSubMeasurements.set(event.eventId, {
+          name: event.name,
+          startTimeMs: event.startTimeMs
+        });
+      } else {
+        this.logger.trace(`PerformanceClient: Performance measurement for ${event.name} started`, event.correlationId);
+        this.eventsByCorrelationId.set(event.correlationId, { ...event });
+        this.eventStack.set(event.correlationId, []);
+      }
+    }
+    getQueueInfo(correlationId) {
+      const queueMeasurementForCorrelationId = this.queueMeasurements.get(correlationId);
+      if (!queueMeasurementForCorrelationId) {
+        this.logger.trace(`PerformanceClient: no queue measurements found for for correlationId: ${correlationId}`);
+      }
+      let totalQueueTime = 0;
+      let totalQueueCount = 0;
+      let manuallyCompletedCount = 0;
+      queueMeasurementForCorrelationId?.forEach((measurement) => {
+        totalQueueTime += measurement.queueTime;
+        totalQueueCount++;
+        manuallyCompletedCount += measurement.manuallyCompleted ? 1 : 0;
+      });
+      return {
+        totalQueueTime,
+        totalQueueCount,
+        manuallyCompletedCount
+      };
+    }
+    /**
+     * Removes measurements and aux data for a given correlation id.
+     *
+     * @param {string} correlationId
+     */
+    discardMeasurements(correlationId) {
+      this.logger.trace("PerformanceClient: Performance measurements discarded", correlationId);
+      this.eventsByCorrelationId.delete(correlationId);
+      this.logger.trace("PerformanceClient: QueueMeasurements discarded", correlationId);
+      this.queueMeasurements.delete(correlationId);
+      this.logger.trace("PerformanceClient: Pre-queue times discarded", correlationId);
+      this.preQueueTimeByCorrelationId.delete(correlationId);
+      this.logger.trace("PerformanceClient: Event stack discarded", correlationId);
+      this.eventStack.delete(correlationId);
+    }
+    /**
+     * Registers a callback function to receive performance events.
+     *
+     * @param {PerformanceCallbackFunction} callback
+     * @returns {string}
+     */
+    addPerformanceCallback(callback) {
+      for (const [id, cb] of this.callbacks) {
+        if (cb.toString() === callback.toString()) {
+          this.logger.warning(`PerformanceClient: Performance callback is already registered with id: ${id}`);
+          return id;
+        }
+      }
+      const callbackId = this.generateId();
+      this.callbacks.set(callbackId, callback);
+      this.logger.verbose(`PerformanceClient: Performance callback registered with id: ${callbackId}`);
+      return callbackId;
+    }
+    /**
+     * Removes a callback registered with addPerformanceCallback.
+     *
+     * @param {string} callbackId
+     * @returns {boolean}
+     */
+    removePerformanceCallback(callbackId) {
+      const result = this.callbacks.delete(callbackId);
+      if (result) {
+        this.logger.verbose(`PerformanceClient: Performance callback ${callbackId} removed.`);
+      } else {
+        this.logger.verbose(`PerformanceClient: Performance callback ${callbackId} not removed.`);
+      }
+      return result;
+    }
+    /**
+     * Emits events to all registered callbacks.
+     *
+     * @param {PerformanceEvent[]} events
+     * @param {?string} [correlationId]
+     */
+    emitEvents(events, correlationId) {
+      this.logger.verbose("PerformanceClient: Emitting performance events", correlationId);
+      this.callbacks.forEach((callback, callbackId) => {
+        this.logger.trace(`PerformanceClient: Emitting event to callback ${callbackId}`, correlationId);
+        callback.apply(null, [events]);
+      });
+    }
+    /**
+     * Enforce truncation of integral fields in performance event.
+     * @param {PerformanceEvent} event performance event to update.
+     */
+    truncateIntegralFields(event) {
+      this.intFields.forEach((key) => {
+        if (key in event && typeof event[key] === "number") {
+          event[key] = Math.floor(event[key]);
+        }
+      });
+    }
+    /**
+     * Returns event duration in milliseconds
+     * @param startTimeMs {number}
+     * @returns {number}
+     */
+    getDurationMs(startTimeMs) {
+      const durationMs = Date.now() - startTimeMs;
+      return durationMs < 0 ? durationMs : 0;
+    }
+  };
+
   // node_modules/@azure/msal-browser/dist/error/BrowserAuthErrorCodes.mjs
+  var BrowserAuthErrorCodes_exports = {};
+  __export(BrowserAuthErrorCodes_exports, {
+    authCodeOrNativeAccountIdRequired: () => authCodeOrNativeAccountIdRequired,
+    authCodeRequired: () => authCodeRequired,
+    authRequestNotSetError: () => authRequestNotSetError,
+    blockIframeReload: () => blockIframeReload,
+    blockNestedPopups: () => blockNestedPopups,
+    cryptoKeyNotFound: () => cryptoKeyNotFound,
+    cryptoNonExistent: () => cryptoNonExistent,
+    databaseNotOpen: () => databaseNotOpen,
+    databaseUnavailable: () => databaseUnavailable,
+    earJweEmpty: () => earJweEmpty,
+    earJwkEmpty: () => earJwkEmpty,
+    emptyNavigateUri: () => emptyNavigateUri,
+    emptyWindowError: () => emptyWindowError,
+    failedToBuildHeaders: () => failedToBuildHeaders,
+    failedToDecryptEarResponse: () => failedToDecryptEarResponse,
+    failedToParseHeaders: () => failedToParseHeaders,
+    failedToParseResponse: () => failedToParseResponse,
+    getRequestFailed: () => getRequestFailed,
+    hashDoesNotContainKnownProperties: () => hashDoesNotContainKnownProperties,
+    hashEmptyError: () => hashEmptyError,
+    iframeClosedPrematurely: () => iframeClosedPrematurely,
+    interactionInProgress: () => interactionInProgress,
+    invalidBase64String: () => invalidBase64String,
+    invalidCacheType: () => invalidCacheType,
+    invalidPopTokenRequest: () => invalidPopTokenRequest,
+    monitorPopupTimeout: () => monitorPopupTimeout,
+    monitorWindowTimeout: () => monitorWindowTimeout,
+    nativeConnectionNotEstablished: () => nativeConnectionNotEstablished,
+    nativeExtensionNotInstalled: () => nativeExtensionNotInstalled,
+    nativeHandshakeTimeout: () => nativeHandshakeTimeout,
+    nativePromptNotSupported: () => nativePromptNotSupported,
+    noAccountError: () => noAccountError,
+    noNetworkConnectivity: () => noNetworkConnectivity2,
+    noStateInHash: () => noStateInHash,
+    noTokenRequestCacheError: () => noTokenRequestCacheError,
+    nonBrowserEnvironment: () => nonBrowserEnvironment,
+    pkceNotCreated: () => pkceNotCreated,
+    popupWindowError: () => popupWindowError,
+    postRequestFailed: () => postRequestFailed2,
+    redirectInIframe: () => redirectInIframe,
+    silentLogoutUnsupported: () => silentLogoutUnsupported,
+    silentPromptValueError: () => silentPromptValueError,
+    spaCodeAndNativeAccountIdPresent: () => spaCodeAndNativeAccountIdPresent,
+    stateInteractionTypeMismatch: () => stateInteractionTypeMismatch,
+    timedOut: () => timedOut,
+    unableToAcquireTokenFromNativePlatform: () => unableToAcquireTokenFromNativePlatform,
+    unableToLoadToken: () => unableToLoadToken,
+    unableToParseState: () => unableToParseState,
+    unableToParseTokenRequestCacheError: () => unableToParseTokenRequestCacheError,
+    uninitializedPublicClientApplication: () => uninitializedPublicClientApplication,
+    userCancelled: () => userCancelled
+  });
   var pkceNotCreated = "pkce_not_created";
   var earJwkEmpty = "ear_jwk_empty";
   var earJweEmpty = "ear_jwe_empty";
@@ -7038,10 +7882,44 @@ ${serverError}`);
     InteractionType2["Silent"] = "silent";
     InteractionType2["None"] = "none";
   })(InteractionType || (InteractionType = {}));
+  var InteractionStatus = {
+    /**
+     * Initial status before interaction occurs
+     */
+    Startup: "startup",
+    /**
+     * Status set when all login calls occuring
+     */
+    Login: "login",
+    /**
+     * Status set when logout call occuring
+     */
+    Logout: "logout",
+    /**
+     * Status set for acquireToken calls
+     */
+    AcquireToken: "acquireToken",
+    /**
+     * Status set for ssoSilent calls
+     */
+    SsoSilent: "ssoSilent",
+    /**
+     * Status set when handleRedirect in progress
+     */
+    HandleRedirect: "handleRedirect",
+    /**
+     * Status set when interaction is complete
+     */
+    None: "none"
+  };
   var DEFAULT_REQUEST = {
     scopes: OIDC_DEFAULT_SCOPES
   };
   var KEY_FORMAT_JWK = "jwk";
+  var WrapperSKU = {
+    React: "@azure/msal-react",
+    Angular: "@azure/msal-angular"
+  };
   var DB_NAME = "msal.db";
   var DB_VERSION = 1;
   var DB_TABLE_NAME = `${DB_NAME}.keys`;
@@ -7311,6 +8189,12 @@ ${serverError}`);
   }
 
   // node_modules/@azure/msal-browser/dist/error/BrowserConfigurationAuthErrorCodes.mjs
+  var BrowserConfigurationAuthErrorCodes_exports = {};
+  __export(BrowserConfigurationAuthErrorCodes_exports, {
+    inMemRedirectUnavailable: () => inMemRedirectUnavailable,
+    storageNotSupported: () => storageNotSupported,
+    stubbedPublicClientApplicationCalled: () => stubbedPublicClientApplicationCalled
+  });
   var storageNotSupported = "storage_not_supported";
   var stubbedPublicClientApplicationCalled = "stubbed_public_client_application_called";
   var inMemRedirectUnavailable = "in_mem_redirect_unavailable";
@@ -7758,6 +8642,213 @@ ${serverError}`);
       return this.browserEnvironment;
     }
   };
+
+  // node_modules/@azure/msal-browser/dist/naa/BridgeStatusCode.mjs
+  var BridgeStatusCode = {
+    UserInteractionRequired: "USER_INTERACTION_REQUIRED",
+    UserCancel: "USER_CANCEL",
+    NoNetwork: "NO_NETWORK",
+    TransientError: "TRANSIENT_ERROR",
+    PersistentError: "PERSISTENT_ERROR",
+    Disabled: "DISABLED",
+    AccountUnavailable: "ACCOUNT_UNAVAILABLE",
+    NestedAppAuthUnavailable: "NESTED_APP_AUTH_UNAVAILABLE"
+    // NAA is unavailable in the current context, can retry with standard browser based auth
+  };
+
+  // node_modules/@azure/msal-browser/dist/naa/BridgeProxy.mjs
+  var BridgeProxy = class _BridgeProxy {
+    /**
+     * initializeNestedAppAuthBridge - Initializes the bridge to the host app
+     * @returns a promise that resolves to an InitializeBridgeResponse or rejects with an Error
+     * @remarks This method will be called by the create factory method
+     * @remarks If the bridge is not available, this method will throw an error
+     */
+    static async initializeNestedAppAuthBridge() {
+      if (window === void 0) {
+        throw new Error("window is undefined");
+      }
+      if (window.nestedAppAuthBridge === void 0) {
+        throw new Error("window.nestedAppAuthBridge is undefined");
+      }
+      try {
+        window.nestedAppAuthBridge.addEventListener("message", (response) => {
+          const responsePayload = typeof response === "string" ? response : response.data;
+          const responseEnvelope = JSON.parse(responsePayload);
+          const request = _BridgeProxy.bridgeRequests.find((element) => element.requestId === responseEnvelope.requestId);
+          if (request !== void 0) {
+            _BridgeProxy.bridgeRequests.splice(_BridgeProxy.bridgeRequests.indexOf(request), 1);
+            if (responseEnvelope.success) {
+              request.resolve(responseEnvelope);
+            } else {
+              request.reject(responseEnvelope.error);
+            }
+          }
+        });
+        const bridgeResponse = await new Promise((resolve, reject) => {
+          const message = _BridgeProxy.buildRequest("GetInitContext");
+          const request = {
+            requestId: message.requestId,
+            method: message.method,
+            resolve,
+            reject
+          };
+          _BridgeProxy.bridgeRequests.push(request);
+          window.nestedAppAuthBridge.postMessage(JSON.stringify(message));
+        });
+        return _BridgeProxy.validateBridgeResultOrThrow(bridgeResponse.initContext);
+      } catch (error) {
+        window.console.log(error);
+        throw error;
+      }
+    }
+    /**
+     * getTokenInteractive - Attempts to get a token interactively from the bridge
+     * @param request A token request
+     * @returns a promise that resolves to an auth result or rejects with a BridgeError
+     */
+    getTokenInteractive(request) {
+      return this.getToken("GetTokenPopup", request);
+    }
+    /**
+     * getTokenSilent Attempts to get a token silently from the bridge
+     * @param request A token request
+     * @returns a promise that resolves to an auth result or rejects with a BridgeError
+     */
+    getTokenSilent(request) {
+      return this.getToken("GetToken", request);
+    }
+    async getToken(requestType, request) {
+      const result = await this.sendRequest(requestType, {
+        tokenParams: request
+      });
+      return {
+        token: _BridgeProxy.validateBridgeResultOrThrow(result.token),
+        account: _BridgeProxy.validateBridgeResultOrThrow(result.account)
+      };
+    }
+    getHostCapabilities() {
+      return this.capabilities ?? null;
+    }
+    getAccountContext() {
+      return this.accountContext ? this.accountContext : null;
+    }
+    static buildRequest(method, requestParams) {
+      return {
+        messageType: "NestedAppAuthRequest",
+        method,
+        requestId: createNewGuid(),
+        sendTime: Date.now(),
+        clientLibrary: BrowserConstants.MSAL_SKU,
+        clientLibraryVersion: version2,
+        ...requestParams
+      };
+    }
+    /**
+     * A method used to send a request to the bridge
+     * @param request A token request
+     * @returns a promise that resolves to a response of provided type or rejects with a BridgeError
+     */
+    sendRequest(method, requestParams) {
+      const message = _BridgeProxy.buildRequest(method, requestParams);
+      const promise = new Promise((resolve, reject) => {
+        const request = {
+          requestId: message.requestId,
+          method: message.method,
+          resolve,
+          reject
+        };
+        _BridgeProxy.bridgeRequests.push(request);
+        window.nestedAppAuthBridge.postMessage(JSON.stringify(message));
+      });
+      return promise;
+    }
+    static validateBridgeResultOrThrow(input) {
+      if (input === void 0) {
+        const bridgeError = {
+          status: BridgeStatusCode.NestedAppAuthUnavailable
+        };
+        throw bridgeError;
+      }
+      return input;
+    }
+    /**
+     * Private constructor for BridgeProxy
+     * @param sdkName The name of the SDK being used to make requests on behalf of the app
+     * @param sdkVersion The version of the SDK being used to make requests on behalf of the app
+     * @param capabilities The capabilities of the bridge / SDK / platform broker
+     */
+    constructor(sdkName, sdkVersion, accountContext, capabilities) {
+      this.sdkName = sdkName;
+      this.sdkVersion = sdkVersion;
+      this.accountContext = accountContext;
+      this.capabilities = capabilities;
+    }
+    /**
+     * Factory method for creating an implementation of IBridgeProxy
+     * @returns A promise that resolves to a BridgeProxy implementation
+     */
+    static async create() {
+      const response = await _BridgeProxy.initializeNestedAppAuthBridge();
+      return new _BridgeProxy(response.sdkName, response.sdkVersion, response.accountContext, response.capabilities);
+    }
+  };
+  BridgeProxy.bridgeRequests = [];
+
+  // node_modules/@azure/msal-browser/dist/operatingcontext/NestedAppOperatingContext.mjs
+  var NestedAppOperatingContext = class _NestedAppOperatingContext extends BaseOperatingContext {
+    constructor() {
+      super(...arguments);
+      this.bridgeProxy = void 0;
+      this.accountContext = null;
+    }
+    /**
+     * Return the module name.  Intended for use with import() to enable dynamic import
+     * of the implementation associated with this operating context
+     * @returns
+     */
+    getModuleName() {
+      return _NestedAppOperatingContext.MODULE_NAME;
+    }
+    /**
+     * Returns the unique identifier for this operating context
+     * @returns string
+     */
+    getId() {
+      return _NestedAppOperatingContext.ID;
+    }
+    /**
+     * Returns the current BridgeProxy
+     * @returns IBridgeProxy | undefined
+     */
+    getBridgeProxy() {
+      return this.bridgeProxy;
+    }
+    /**
+     * Checks whether the operating context is available.
+     * Confirms that the code is running a browser rather.  This is required.
+     * @returns Promise<boolean> indicating whether this operating context is currently available.
+     */
+    async initialize() {
+      try {
+        if (typeof window !== "undefined") {
+          if (typeof window.__initializeNestedAppAuth === "function") {
+            await window.__initializeNestedAppAuth();
+          }
+          const bridgeProxy = await BridgeProxy.create();
+          this.accountContext = bridgeProxy.getAccountContext();
+          this.bridgeProxy = bridgeProxy;
+          this.available = bridgeProxy !== void 0;
+        }
+      } catch (ex) {
+        this.logger.infoPii(`Could not initialize Nested App Auth bridge (${ex})`);
+      }
+      this.logger.info(`Nested App Auth Bridge available: ${this.available}`);
+      return this.available;
+    }
+  };
+  NestedAppOperatingContext.MODULE_NAME = "";
+  NestedAppOperatingContext.ID = "NestedAppOperatingContext";
 
   // node_modules/@azure/msal-browser/dist/operatingcontext/StandardOperatingContext.mjs
   var StandardOperatingContext = class _StandardOperatingContext extends BaseOperatingContext {
@@ -11528,6 +12619,16 @@ ${serverError}`);
   };
 
   // node_modules/@azure/msal-browser/dist/broker/nativeBroker/PlatformAuthProvider.mjs
+  async function isPlatformBrokerAvailable(loggerOptions, perfClient, correlationId) {
+    const logger = new Logger(loggerOptions || {}, name2, version2);
+    logger.trace("isPlatformBrokerAvailable called");
+    const performanceClient = perfClient || new StubPerformanceClient();
+    if (typeof window === "undefined") {
+      logger.trace("Non-browser environment detected, returning false");
+      return false;
+    }
+    return !!await getPlatformAuthProvider(logger, performanceClient, correlationId || createNewGuid());
+  }
   async function getPlatformAuthProvider(logger, performanceClient, correlationId, nativeBrokerHandshakeTimeout) {
     logger.trace("getPlatformAuthProvider called", correlationId);
     const enablePlatformBrokerDOMSupport = isDomEnabledForPlatformAuth();
@@ -14180,11 +15281,678 @@ ${serverError}`);
     return isSilentlyResolvable && tryIframeRenewal;
   }
 
+  // node_modules/@azure/msal-browser/dist/naa/BridgeError.mjs
+  function isBridgeError(error) {
+    return error.status !== void 0;
+  }
+
+  // node_modules/@azure/msal-browser/dist/naa/mapping/NestedAppAuthAdapter.mjs
+  var NestedAppAuthAdapter = class {
+    constructor(clientId, clientCapabilities, crypto, logger) {
+      this.clientId = clientId;
+      this.clientCapabilities = clientCapabilities;
+      this.crypto = crypto;
+      this.logger = logger;
+    }
+    toNaaTokenRequest(request) {
+      let extraParams;
+      if (request.extraQueryParameters === void 0) {
+        extraParams = /* @__PURE__ */ new Map();
+      } else {
+        extraParams = new Map(Object.entries(request.extraQueryParameters));
+      }
+      const correlationId = request.correlationId || this.crypto.createNewGuid();
+      const claims = RequestParameterBuilder_exports.addClientCapabilitiesToClaims(request.claims, this.clientCapabilities);
+      const scopes = request.scopes || OIDC_DEFAULT_SCOPES;
+      const tokenRequest = {
+        platformBrokerId: request.account?.homeAccountId,
+        clientId: this.clientId,
+        authority: request.authority,
+        scope: scopes.join(" "),
+        correlationId,
+        claims: !StringUtils.isEmptyObj(claims) ? claims : void 0,
+        state: request.state,
+        authenticationScheme: request.authenticationScheme || AuthenticationScheme.BEARER,
+        extraParameters: extraParams
+      };
+      return tokenRequest;
+    }
+    fromNaaTokenResponse(request, response, reqTimestamp) {
+      if (!response.token.id_token || !response.token.access_token) {
+        throw createClientAuthError(ClientAuthErrorCodes_exports.nullOrEmptyToken);
+      }
+      const expiresOn = TimeUtils_exports.toDateFromSeconds(reqTimestamp + (response.token.expires_in || 0));
+      const idTokenClaims = AuthToken_exports.extractTokenClaims(response.token.id_token, this.crypto.base64Decode);
+      const account2 = this.fromNaaAccountInfo(response.account, response.token.id_token, idTokenClaims);
+      const scopes = response.token.scope || request.scope;
+      const authenticationResult = {
+        authority: response.token.authority || account2.environment,
+        uniqueId: account2.localAccountId,
+        tenantId: account2.tenantId,
+        scopes: scopes.split(" "),
+        account: account2,
+        idToken: response.token.id_token,
+        idTokenClaims,
+        accessToken: response.token.access_token,
+        fromCache: false,
+        expiresOn,
+        tokenType: request.authenticationScheme || AuthenticationScheme.BEARER,
+        correlationId: request.correlationId,
+        extExpiresOn: expiresOn,
+        state: request.state
+      };
+      return authenticationResult;
+    }
+    /*
+     *  export type AccountInfo = {
+     *     homeAccountId: string;
+     *     environment: string;
+     *     tenantId: string;
+     *     username: string;
+     *     localAccountId: string;
+     *     name?: string;
+     *     idToken?: string;
+     *     idTokenClaims?: TokenClaims & {
+     *         [key: string]:
+     *             | string
+     *             | number
+     *             | string[]
+     *             | object
+     *             | undefined
+     *             | unknown;
+     *     };
+     *     nativeAccountId?: string;
+     *     authorityType?: string;
+     * };
+     */
+    fromNaaAccountInfo(fromAccount, idToken, idTokenClaims) {
+      const effectiveIdTokenClaims = idTokenClaims || fromAccount.idTokenClaims;
+      const localAccountId = fromAccount.localAccountId || effectiveIdTokenClaims?.oid || effectiveIdTokenClaims?.sub || "";
+      const tenantId = fromAccount.tenantId || effectiveIdTokenClaims?.tid || "";
+      const homeAccountId = fromAccount.homeAccountId || `${localAccountId}.${tenantId}`;
+      const username = fromAccount.username || effectiveIdTokenClaims?.preferred_username || "";
+      const name3 = fromAccount.name || effectiveIdTokenClaims?.name;
+      const loginHint = fromAccount.loginHint || effectiveIdTokenClaims?.login_hint;
+      const tenantProfiles = /* @__PURE__ */ new Map();
+      const tenantProfile = buildTenantProfile(homeAccountId, localAccountId, tenantId, effectiveIdTokenClaims);
+      tenantProfiles.set(tenantId, tenantProfile);
+      const account2 = {
+        homeAccountId,
+        environment: fromAccount.environment,
+        tenantId,
+        username,
+        localAccountId,
+        name: name3,
+        loginHint,
+        idToken,
+        idTokenClaims: effectiveIdTokenClaims,
+        tenantProfiles
+      };
+      return account2;
+    }
+    /**
+     *
+     * @param error BridgeError
+     * @returns AuthError, ClientAuthError, ClientConfigurationError, ServerError, InteractionRequiredError
+     */
+    fromBridgeError(error) {
+      if (isBridgeError(error)) {
+        switch (error.status) {
+          case BridgeStatusCode.UserCancel:
+            return new ClientAuthError(ClientAuthErrorCodes_exports.userCanceled);
+          case BridgeStatusCode.NoNetwork:
+            return new ClientAuthError(ClientAuthErrorCodes_exports.noNetworkConnectivity);
+          case BridgeStatusCode.AccountUnavailable:
+            return new ClientAuthError(ClientAuthErrorCodes_exports.noAccountFound);
+          case BridgeStatusCode.Disabled:
+            return new ClientAuthError(ClientAuthErrorCodes_exports.nestedAppAuthBridgeDisabled);
+          case BridgeStatusCode.NestedAppAuthUnavailable:
+            return new ClientAuthError(error.code || ClientAuthErrorCodes_exports.nestedAppAuthBridgeDisabled, error.description);
+          case BridgeStatusCode.TransientError:
+          case BridgeStatusCode.PersistentError:
+            return new ServerError(error.code, error.description);
+          case BridgeStatusCode.UserInteractionRequired:
+            return new InteractionRequiredAuthError(error.code, error.description);
+          default:
+            return new AuthError(error.code, error.description);
+        }
+      } else {
+        return new AuthError("unknown_error", "An unknown error occurred");
+      }
+    }
+    /**
+     * Returns an AuthenticationResult from the given cache items
+     *
+     * @param account
+     * @param idToken
+     * @param accessToken
+     * @param reqTimestamp
+     * @returns
+     */
+    toAuthenticationResultFromCache(account2, idToken, accessToken, request, correlationId) {
+      if (!idToken || !accessToken) {
+        throw createClientAuthError(ClientAuthErrorCodes_exports.nullOrEmptyToken);
+      }
+      const idTokenClaims = AuthToken_exports.extractTokenClaims(idToken.secret, this.crypto.base64Decode);
+      const scopes = accessToken.target || request.scopes.join(" ");
+      const authenticationResult = {
+        authority: accessToken.environment || account2.environment,
+        uniqueId: account2.localAccountId,
+        tenantId: account2.tenantId,
+        scopes: scopes.split(" "),
+        account: account2,
+        idToken: idToken.secret,
+        idTokenClaims: idTokenClaims || {},
+        accessToken: accessToken.secret,
+        fromCache: true,
+        expiresOn: TimeUtils_exports.toDateFromSeconds(accessToken.expiresOn),
+        extExpiresOn: TimeUtils_exports.toDateFromSeconds(accessToken.extendedExpiresOn),
+        tokenType: request.authenticationScheme || AuthenticationScheme.BEARER,
+        correlationId,
+        state: request.state
+      };
+      return authenticationResult;
+    }
+  };
+
+  // node_modules/@azure/msal-browser/dist/error/NestedAppAuthError.mjs
+  var NestedAppAuthErrorMessage = {
+    unsupportedMethod: {
+      code: "unsupported_method",
+      desc: "This method is not supported in nested app environment."
+    }
+  };
+  var NestedAppAuthError = class _NestedAppAuthError extends AuthError {
+    constructor(errorCode, errorMessage) {
+      super(errorCode, errorMessage);
+      Object.setPrototypeOf(this, _NestedAppAuthError.prototype);
+      this.name = "NestedAppAuthError";
+    }
+    static createUnsupportedError() {
+      return new _NestedAppAuthError(NestedAppAuthErrorMessage.unsupportedMethod.code, NestedAppAuthErrorMessage.unsupportedMethod.desc);
+    }
+  };
+
+  // node_modules/@azure/msal-browser/dist/controllers/NestedAppAuthController.mjs
+  var NestedAppAuthController = class _NestedAppAuthController {
+    constructor(operatingContext) {
+      this.operatingContext = operatingContext;
+      const proxy = this.operatingContext.getBridgeProxy();
+      if (proxy !== void 0) {
+        this.bridgeProxy = proxy;
+      } else {
+        throw new Error("unexpected: bridgeProxy is undefined");
+      }
+      this.config = operatingContext.getConfig();
+      this.logger = this.operatingContext.getLogger();
+      this.performanceClient = this.config.telemetry.client;
+      this.browserCrypto = operatingContext.isBrowserEnvironment() ? new CryptoOps(this.logger, this.performanceClient, true) : DEFAULT_CRYPTO_IMPLEMENTATION;
+      this.eventHandler = new EventHandler(this.logger);
+      this.browserStorage = this.operatingContext.isBrowserEnvironment() ? new BrowserCacheManager(this.config.auth.clientId, this.config.cache, this.browserCrypto, this.logger, this.performanceClient, this.eventHandler, buildStaticAuthorityOptions(this.config.auth)) : DEFAULT_BROWSER_CACHE_MANAGER(this.config.auth.clientId, this.logger, this.performanceClient, this.eventHandler);
+      this.nestedAppAuthAdapter = new NestedAppAuthAdapter(this.config.auth.clientId, this.config.auth.clientCapabilities, this.browserCrypto, this.logger);
+      const accountContext = this.bridgeProxy.getAccountContext();
+      this.currentAccountContext = accountContext ? accountContext : null;
+    }
+    /**
+     * Factory function to create a new instance of NestedAppAuthController
+     * @param operatingContext
+     * @returns Promise<IController>
+     */
+    static async createController(operatingContext) {
+      const controller = new _NestedAppAuthController(operatingContext);
+      return Promise.resolve(controller);
+    }
+    /**
+     * Specific implementation of initialize function for NestedAppAuthController
+     * @returns
+     */
+    async initialize(request, isBroker) {
+      const initCorrelationId = request?.correlationId || createNewGuid();
+      await this.browserStorage.initialize(initCorrelationId);
+      return Promise.resolve();
+    }
+    /**
+     * Validate the incoming request and add correlationId if not present
+     * @param request
+     * @returns
+     */
+    ensureValidRequest(request) {
+      if (request?.correlationId) {
+        return request;
+      }
+      return {
+        ...request,
+        correlationId: this.browserCrypto.createNewGuid()
+      };
+    }
+    /**
+     * Internal implementation of acquireTokenInteractive flow
+     * @param request
+     * @returns
+     */
+    async acquireTokenInteractive(request) {
+      const validRequest = this.ensureValidRequest(request);
+      this.eventHandler.emitEvent(EventType.ACQUIRE_TOKEN_START, InteractionType.Popup, validRequest);
+      const atPopupMeasurement = this.performanceClient.startMeasurement(PerformanceEvents.AcquireTokenPopup, validRequest.correlationId);
+      atPopupMeasurement.add({ nestedAppAuthRequest: true });
+      try {
+        const naaRequest = this.nestedAppAuthAdapter.toNaaTokenRequest(validRequest);
+        const reqTimestamp = TimeUtils_exports.nowSeconds();
+        const response = await this.bridgeProxy.getTokenInteractive(naaRequest);
+        const result = {
+          ...this.nestedAppAuthAdapter.fromNaaTokenResponse(naaRequest, response, reqTimestamp)
+        };
+        try {
+          await this.hydrateCache(result, request);
+        } catch (error) {
+          this.logger.warningPii(`Failed to hydrate cache. Error: ${error}`, validRequest.correlationId);
+        }
+        this.currentAccountContext = {
+          homeAccountId: result.account.homeAccountId,
+          environment: result.account.environment,
+          tenantId: result.account.tenantId
+        };
+        this.eventHandler.emitEvent(EventType.ACQUIRE_TOKEN_SUCCESS, InteractionType.Popup, result);
+        atPopupMeasurement.add({
+          accessTokenSize: result.accessToken.length,
+          idTokenSize: result.idToken.length
+        });
+        atPopupMeasurement.end({
+          success: true,
+          requestId: result.requestId
+        }, void 0, result.account);
+        return result;
+      } catch (e) {
+        const error = e instanceof AuthError ? e : this.nestedAppAuthAdapter.fromBridgeError(e);
+        this.eventHandler.emitEvent(EventType.ACQUIRE_TOKEN_FAILURE, InteractionType.Popup, null, e);
+        atPopupMeasurement.end({
+          success: false
+        }, e, request.account);
+        throw error;
+      }
+    }
+    /**
+     * Internal implementation of acquireTokenSilent flow
+     * @param request
+     * @returns
+     */
+    async acquireTokenSilentInternal(request) {
+      const validRequest = this.ensureValidRequest(request);
+      this.eventHandler.emitEvent(EventType.ACQUIRE_TOKEN_START, InteractionType.Silent, validRequest);
+      const result = await this.acquireTokenFromCache(validRequest);
+      if (result) {
+        this.eventHandler.emitEvent(EventType.ACQUIRE_TOKEN_SUCCESS, InteractionType.Silent, result);
+        return result;
+      }
+      const ssoSilentMeasurement = this.performanceClient.startMeasurement(PerformanceEvents.SsoSilent, validRequest.correlationId);
+      ssoSilentMeasurement.increment({
+        visibilityChangeCount: 0
+      });
+      ssoSilentMeasurement.add({
+        nestedAppAuthRequest: true
+      });
+      try {
+        const naaRequest = this.nestedAppAuthAdapter.toNaaTokenRequest(validRequest);
+        naaRequest.forceRefresh = validRequest.forceRefresh;
+        const reqTimestamp = TimeUtils_exports.nowSeconds();
+        const response = await this.bridgeProxy.getTokenSilent(naaRequest);
+        const result2 = this.nestedAppAuthAdapter.fromNaaTokenResponse(naaRequest, response, reqTimestamp);
+        try {
+          await this.hydrateCache(result2, request);
+        } catch (error) {
+          this.logger.warningPii(`Failed to hydrate cache. Error: ${error}`, validRequest.correlationId);
+        }
+        this.currentAccountContext = {
+          homeAccountId: result2.account.homeAccountId,
+          environment: result2.account.environment,
+          tenantId: result2.account.tenantId
+        };
+        this.eventHandler.emitEvent(EventType.ACQUIRE_TOKEN_SUCCESS, InteractionType.Silent, result2);
+        ssoSilentMeasurement?.add({
+          accessTokenSize: result2.accessToken.length,
+          idTokenSize: result2.idToken.length
+        });
+        ssoSilentMeasurement?.end({
+          success: true,
+          requestId: result2.requestId
+        }, void 0, result2.account);
+        return result2;
+      } catch (e) {
+        const error = e instanceof AuthError ? e : this.nestedAppAuthAdapter.fromBridgeError(e);
+        this.eventHandler.emitEvent(EventType.ACQUIRE_TOKEN_FAILURE, InteractionType.Silent, null, e);
+        ssoSilentMeasurement?.end({
+          success: false
+        }, e, request.account);
+        throw error;
+      }
+    }
+    /**
+     * acquires tokens from cache
+     * @param request
+     * @returns
+     */
+    async acquireTokenFromCache(request) {
+      const atsMeasurement = this.performanceClient.startMeasurement(PerformanceEvents.AcquireTokenSilent, request.correlationId);
+      atsMeasurement?.add({
+        nestedAppAuthRequest: true
+      });
+      if (request.claims) {
+        this.logger.verbose("Claims are present in the request, skipping cache lookup");
+        return null;
+      }
+      if (request.forceRefresh) {
+        this.logger.verbose("forceRefresh is set to true, skipping cache lookup");
+        return null;
+      }
+      let result = null;
+      if (!request.cacheLookupPolicy) {
+        request.cacheLookupPolicy = CacheLookupPolicy.Default;
+      }
+      switch (request.cacheLookupPolicy) {
+        case CacheLookupPolicy.Default:
+        case CacheLookupPolicy.AccessToken:
+        case CacheLookupPolicy.AccessTokenAndRefreshToken:
+          result = await this.acquireTokenFromCacheInternal(request);
+          break;
+        default:
+          return null;
+      }
+      if (result) {
+        this.eventHandler.emitEvent(EventType.ACQUIRE_TOKEN_SUCCESS, InteractionType.Silent, result);
+        atsMeasurement.add({
+          accessTokenSize: result.accessToken.length,
+          idTokenSize: result.idToken.length
+        });
+        atsMeasurement.end({
+          success: true
+        }, void 0, result.account);
+        return result;
+      }
+      this.logger.warning("Cached tokens are not found for the account, proceeding with silent token request.");
+      this.eventHandler.emitEvent(EventType.ACQUIRE_TOKEN_FAILURE, InteractionType.Silent, null);
+      atsMeasurement.end({
+        success: false
+      }, void 0, request.account);
+      return null;
+    }
+    /**
+     *
+     * @param request
+     * @returns
+     */
+    async acquireTokenFromCacheInternal(request) {
+      const accountContext = this.bridgeProxy.getAccountContext() || this.currentAccountContext;
+      let currentAccount = null;
+      const correlationId = request.correlationId || this.browserCrypto.createNewGuid();
+      if (accountContext) {
+        currentAccount = getAccount(accountContext, this.logger, this.browserStorage, correlationId);
+      }
+      if (!currentAccount) {
+        this.logger.verbose("No active account found, falling back to the host");
+        return Promise.resolve(null);
+      }
+      this.logger.verbose("active account found, attempting to acquire token silently");
+      const authRequest = {
+        ...request,
+        correlationId: request.correlationId || this.browserCrypto.createNewGuid(),
+        authority: request.authority || currentAccount.environment,
+        scopes: request.scopes?.length ? request.scopes : [...OIDC_DEFAULT_SCOPES]
+      };
+      const tokenKeys = this.browserStorage.getTokenKeys();
+      const cachedAccessToken = this.browserStorage.getAccessToken(currentAccount, authRequest, tokenKeys, currentAccount.tenantId);
+      if (!cachedAccessToken) {
+        this.logger.verbose("No cached access token found");
+        return Promise.resolve(null);
+      } else if (TimeUtils_exports.wasClockTurnedBack(cachedAccessToken.cachedAt) || TimeUtils_exports.isTokenExpired(cachedAccessToken.expiresOn, this.config.system.tokenRenewalOffsetSeconds)) {
+        this.logger.verbose("Cached access token has expired");
+        return Promise.resolve(null);
+      }
+      const cachedIdToken = this.browserStorage.getIdToken(currentAccount, authRequest.correlationId, tokenKeys, currentAccount.tenantId, this.performanceClient);
+      if (!cachedIdToken) {
+        this.logger.verbose("No cached id token found");
+        return Promise.resolve(null);
+      }
+      return this.nestedAppAuthAdapter.toAuthenticationResultFromCache(currentAccount, cachedIdToken, cachedAccessToken, authRequest, authRequest.correlationId);
+    }
+    /**
+     * acquireTokenPopup flow implementation
+     * @param request
+     * @returns
+     */
+    async acquireTokenPopup(request) {
+      return this.acquireTokenInteractive(request);
+    }
+    /**
+     * acquireTokenRedirect flow is not supported in nested app auth
+     * @param request
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    acquireTokenRedirect(request) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    /**
+     * acquireTokenSilent flow implementation
+     * @param silentRequest
+     * @returns
+     */
+    async acquireTokenSilent(silentRequest) {
+      return this.acquireTokenSilentInternal(silentRequest);
+    }
+    /**
+     * Hybrid flow is not currently supported in nested app auth
+     * @param request
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    acquireTokenByCode(request) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    /**
+     * acquireTokenNative flow is not currently supported in nested app auth
+     * @param request
+     * @param apiId
+     * @param accountId
+     */
+    acquireTokenNative(request, apiId, accountId) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    /**
+     * acquireTokenByRefreshToken flow is not currently supported in nested app auth
+     * @param commonRequest
+     * @param silentRequest
+     */
+    acquireTokenByRefreshToken(commonRequest, silentRequest) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    /**
+     * Adds event callbacks to array
+     * @param callback
+     * @param eventTypes
+     */
+    addEventCallback(callback, eventTypes) {
+      return this.eventHandler.addEventCallback(callback, eventTypes);
+    }
+    /**
+     * Removes callback with provided id from callback array
+     * @param callbackId
+     */
+    removeEventCallback(callbackId) {
+      this.eventHandler.removeEventCallback(callbackId);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    addPerformanceCallback(callback) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    removePerformanceCallback(callbackId) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    enableAccountStorageEvents() {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    disableAccountStorageEvents() {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    // #region Account APIs
+    /**
+     * Returns all the accounts in the cache that match the optional filter. If no filter is provided, all accounts are returned.
+     * @param accountFilter - (Optional) filter to narrow down the accounts returned
+     * @returns Array of AccountInfo objects in cache
+     */
+    getAllAccounts(accountFilter) {
+      const correlationId = this.browserCrypto.createNewGuid();
+      return getAllAccounts(this.logger, this.browserStorage, this.isBrowserEnv(), correlationId, accountFilter);
+    }
+    /**
+     * Returns the first account found in the cache that matches the account filter passed in.
+     * @param accountFilter
+     * @returns The first account found in the cache matching the provided filter or null if no account could be found.
+     */
+    getAccount(accountFilter) {
+      const correlationId = this.browserCrypto.createNewGuid();
+      return getAccount(accountFilter, this.logger, this.browserStorage, correlationId);
+    }
+    /**
+     * Returns the signed in account matching username.
+     * (the account object is created at the time of successful login)
+     * or null when no matching account is found.
+     * This API is provided for convenience but getAccountById should be used for best reliability
+     * @param username
+     * @returns The account object stored in MSAL
+     */
+    getAccountByUsername(username) {
+      const correlationId = this.browserCrypto.createNewGuid();
+      return getAccountByUsername(username, this.logger, this.browserStorage, correlationId);
+    }
+    /**
+     * Returns the signed in account matching homeAccountId.
+     * (the account object is created at the time of successful login)
+     * or null when no matching account is found
+     * @param homeAccountId
+     * @returns The account object stored in MSAL
+     */
+    getAccountByHomeId(homeAccountId) {
+      const correlationId = this.browserCrypto.createNewGuid();
+      return getAccountByHomeId(homeAccountId, this.logger, this.browserStorage, correlationId);
+    }
+    /**
+     * Returns the signed in account matching localAccountId.
+     * (the account object is created at the time of successful login)
+     * or null when no matching account is found
+     * @param localAccountId
+     * @returns The account object stored in MSAL
+     */
+    getAccountByLocalId(localAccountId) {
+      const correlationId = this.browserCrypto.createNewGuid();
+      return getAccountByLocalId(localAccountId, this.logger, this.browserStorage, correlationId);
+    }
+    /**
+     * Sets the account to use as the active account. If no account is passed to the acquireToken APIs, then MSAL will use this active account.
+     * @param account
+     */
+    setActiveAccount(account2) {
+      const correlationId = this.browserCrypto.createNewGuid();
+      return setActiveAccount(account2, this.browserStorage, correlationId);
+    }
+    /**
+     * Gets the currently active account
+     */
+    getActiveAccount() {
+      const correlationId = this.browserCrypto.createNewGuid();
+      return getActiveAccount(this.browserStorage, correlationId);
+    }
+    // #endregion
+    handleRedirectPromise(hash) {
+      return Promise.resolve(null);
+    }
+    loginPopup(request) {
+      return this.acquireTokenInteractive(request || DEFAULT_REQUEST);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    loginRedirect(request) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    logout(logoutRequest) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    logoutRedirect(logoutRequest) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    logoutPopup(logoutRequest) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    ssoSilent(request) {
+      return this.acquireTokenSilentInternal(request);
+    }
+    getTokenCache() {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    /**
+     * Returns the logger instance
+     */
+    getLogger() {
+      return this.logger;
+    }
+    /**
+     * Replaces the default logger set in configurations with new Logger with new configurations
+     * @param logger Logger instance
+     */
+    setLogger(logger) {
+      this.logger = logger;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    initializeWrapperLibrary(sku, version3) {
+      return;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setNavigationClient(navigationClient) {
+      this.logger.warning("setNavigationClient is not supported in nested app auth");
+    }
+    getConfiguration() {
+      return this.config;
+    }
+    isBrowserEnv() {
+      return this.operatingContext.isBrowserEnvironment();
+    }
+    getBrowserCrypto() {
+      return this.browserCrypto;
+    }
+    getPerformanceClient() {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    getRedirectResponse() {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async clearCache(logoutRequest) {
+      throw NestedAppAuthError.createUnsupportedError();
+    }
+    async hydrateCache(result, request) {
+      this.logger.verbose("hydrateCache called");
+      const accountEntity = AccountEntity.createFromAccountInfo(result.account, result.cloudGraphHostName, result.msGraphHost);
+      await this.browserStorage.setAccount(accountEntity, result.correlationId);
+      return this.browserStorage.hydrateCache(result, request);
+    }
+  };
+
   // node_modules/@azure/msal-browser/dist/controllers/ControllerFactory.mjs
   async function createV3Controller(config, request) {
     const standard = new StandardOperatingContext(config);
     await standard.initialize();
     return StandardController.createController(standard, request);
+  }
+  async function createController(config) {
+    const standard = new StandardOperatingContext(config);
+    const nestedApp = new NestedAppOperatingContext(config);
+    const operatingContexts = [standard.initialize(), nestedApp.initialize()];
+    await Promise.all(operatingContexts);
+    if (nestedApp.isAvailable() && config.auth.supportsNestedAppAuth) {
+      return NestedAppAuthController.createController(nestedApp);
+    } else if (standard.isAvailable()) {
+      return StandardController.createController(standard);
+    } else {
+      return null;
+    }
   }
 
   // node_modules/@azure/msal-browser/dist/app/PublicClientApplication.mjs
@@ -14515,27 +16283,946 @@ ${serverError}`);
       return this.controller.clearCache(logoutRequest);
     }
   };
+  async function createNestablePublicClientApplication(configuration) {
+    const nestedAppAuth = new NestedAppOperatingContext(configuration);
+    await nestedAppAuth.initialize();
+    if (nestedAppAuth.isAvailable()) {
+      const controller = new NestedAppAuthController(nestedAppAuth);
+      const nestablePCA = new PublicClientApplication(configuration, controller);
+      await nestablePCA.initialize();
+      return nestablePCA;
+    }
+    return createStandardPublicClientApplication(configuration);
+  }
+  async function createStandardPublicClientApplication(configuration) {
+    const pca2 = new PublicClientApplication(configuration);
+    await pca2.initialize();
+    return pca2;
+  }
+
+  // node_modules/@azure/msal-browser/dist/controllers/UnknownOperatingContextController.mjs
+  var UnknownOperatingContextController = class {
+    constructor(operatingContext) {
+      this.initialized = false;
+      this.operatingContext = operatingContext;
+      this.isBrowserEnvironment = this.operatingContext.isBrowserEnvironment();
+      this.config = operatingContext.getConfig();
+      this.logger = operatingContext.getLogger();
+      this.performanceClient = this.config.telemetry.client;
+      this.browserCrypto = this.isBrowserEnvironment ? new CryptoOps(this.logger, this.performanceClient) : DEFAULT_CRYPTO_IMPLEMENTATION;
+      this.eventHandler = new EventHandler(this.logger);
+      this.browserStorage = this.isBrowserEnvironment ? new BrowserCacheManager(this.config.auth.clientId, this.config.cache, this.browserCrypto, this.logger, this.performanceClient, this.eventHandler, void 0) : DEFAULT_BROWSER_CACHE_MANAGER(this.config.auth.clientId, this.logger, this.performanceClient, this.eventHandler);
+    }
+    getBrowserStorage() {
+      return this.browserStorage;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getAccount(accountFilter) {
+      return null;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getAccountByHomeId(homeAccountId) {
+      return null;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getAccountByLocalId(localAccountId) {
+      return null;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getAccountByUsername(username) {
+      return null;
+    }
+    getAllAccounts() {
+      return [];
+    }
+    initialize() {
+      this.initialized = true;
+      return Promise.resolve();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    acquireTokenPopup(request) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    acquireTokenRedirect(request) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return Promise.resolve();
+    }
+    acquireTokenSilent(silentRequest) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    acquireTokenByCode(request) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    acquireTokenNative(request, apiId, accountId) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    acquireTokenByRefreshToken(commonRequest, silentRequest) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    addEventCallback(callback, eventTypes) {
+      return null;
+    }
+    removeEventCallback(callbackId) {
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    addPerformanceCallback(callback) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return "";
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    removePerformanceCallback(callbackId) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return true;
+    }
+    enableAccountStorageEvents() {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+    }
+    disableAccountStorageEvents() {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+    }
+    handleRedirectPromise(hash) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      return Promise.resolve(null);
+    }
+    loginPopup(request) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    loginRedirect(request) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    logout(logoutRequest) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    logoutRedirect(logoutRequest) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    logoutPopup(logoutRequest) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    ssoSilent(request) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    getTokenCache() {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    getLogger() {
+      return this.logger;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setLogger(logger) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setActiveAccount(account2) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+    }
+    getActiveAccount() {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return null;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    initializeWrapperLibrary(sku, version3) {
+      this.browserStorage.setWrapperMetadata(sku, version3);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setNavigationClient(navigationClient) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+    }
+    getConfiguration() {
+      return this.config;
+    }
+    isBrowserEnv() {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return true;
+    }
+    getBrowserCrypto() {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    getPerformanceClient() {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    getRedirectResponse() {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+      return {};
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async clearCache(logoutRequest) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async hydrateCache(result, request) {
+      blockAPICallsBeforeInitialize(this.initialized);
+      blockNonBrowserEnvironment();
+    }
+  };
+
+  // node_modules/@azure/msal-browser/dist/operatingcontext/UnknownOperatingContext.mjs
+  var UnknownOperatingContext = class _UnknownOperatingContext extends BaseOperatingContext {
+    /**
+     * Returns the unique identifier for this operating context
+     * @returns string
+     */
+    getId() {
+      return _UnknownOperatingContext.ID;
+    }
+    /**
+     * Return the module name.  Intended for use with import() to enable dynamic import
+     * of the implementation associated with this operating context
+     * @returns
+     */
+    getModuleName() {
+      return _UnknownOperatingContext.MODULE_NAME;
+    }
+    /**
+     * Checks whether the operating context is available.
+     * Confirms that the code is running a browser rather.  This is required.
+     * @returns Promise<boolean> indicating whether this operating context is currently available.
+     */
+    async initialize() {
+      return true;
+    }
+  };
+  UnknownOperatingContext.MODULE_NAME = "";
+  UnknownOperatingContext.ID = "UnknownOperatingContext";
+
+  // node_modules/@azure/msal-browser/dist/app/PublicClientNext.mjs
+  var PublicClientNext = class _PublicClientNext {
+    static async createPublicClientApplication(configuration) {
+      const controller = await createController(configuration);
+      let pca2;
+      if (controller !== null) {
+        pca2 = new _PublicClientNext(configuration, controller);
+      } else {
+        pca2 = new _PublicClientNext(configuration);
+      }
+      return pca2;
+    }
+    /**
+     * @constructor
+     * Constructor for the PublicClientNext used to instantiate the PublicClientNext object
+     *
+     * Important attributes in the Configuration object for auth are:
+     * - clientID: the application ID of your application. You can obtain one by registering your application with our Application registration portal : https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredAppsPreview
+     * - authority: the authority URL for your application.
+     * - redirect_uri: the uri of your application registered in the portal.
+     *
+     * In Azure AD, authority is a URL indicating the Azure active directory that MSAL uses to obtain tokens.
+     * It is of the form https://login.microsoftonline.com/{Enter_the_Tenant_Info_Here}
+     * If your application supports Accounts in one organizational directory, replace "Enter_the_Tenant_Info_Here" value with the Tenant Id or Tenant name (for example, contoso.microsoft.com).
+     * If your application supports Accounts in any organizational directory, replace "Enter_the_Tenant_Info_Here" value with organizations.
+     * If your application supports Accounts in any organizational directory and personal Microsoft accounts, replace "Enter_the_Tenant_Info_Here" value with common.
+     * To restrict support to Personal Microsoft accounts only, replace "Enter_the_Tenant_Info_Here" value with consumers.
+     *
+     * In Azure B2C, authority is of the form https://{instance}/tfp/{tenant}/{policyName}/
+     * Full B2C functionality will be available in this library in future versions.
+     *
+     * @param configuration Object for the MSAL PublicClientApplication instance
+     * @param IController Optional parameter to explictly set the controller. (Will be removed when we remove public constructor)
+     */
+    constructor(configuration, controller) {
+      this.configuration = configuration;
+      if (controller) {
+        this.controller = controller;
+      } else {
+        const operatingContext = new UnknownOperatingContext(configuration);
+        this.controller = new UnknownOperatingContextController(operatingContext);
+      }
+    }
+    /**
+     * Initializer function to perform async startup tasks such as connecting to WAM extension
+     */
+    async initialize() {
+      if (this.controller instanceof UnknownOperatingContextController) {
+        const result = await createController(this.configuration);
+        if (result !== null) {
+          this.controller = result;
+        }
+        return this.controller.initialize();
+      }
+      return Promise.resolve();
+    }
+    /**
+     * Use when you want to obtain an access_token for your API via opening a popup window in the user's browser
+     *
+     * @param request
+     *
+     * @returns A promise that is fulfilled when this function has completed, or rejected if an error was raised.
+     */
+    async acquireTokenPopup(request) {
+      return this.controller.acquireTokenPopup(request);
+    }
+    /**
+     * Use when you want to obtain an access_token for your API by redirecting the user's browser window to the authorization endpoint. This function redirects
+     * the page, so any code that follows this function will not execute.
+     *
+     * IMPORTANT: It is NOT recommended to have code that is dependent on the resolution of the Promise. This function will navigate away from the current
+     * browser window. It currently returns a Promise in order to reflect the asynchronous nature of the code running in this function.
+     *
+     * @param request
+     */
+    acquireTokenRedirect(request) {
+      return this.controller.acquireTokenRedirect(request);
+    }
+    /**
+     * Silently acquire an access token for a given set of scopes. Returns currently processing promise if parallel requests are made.
+     *
+     * @param {@link (SilentRequest:type)}
+     * @returns {Promise.<AuthenticationResult>} - a promise that is fulfilled when this function has completed, or rejected if an error was raised. Returns the {@link AuthenticationResult} object
+     */
+    acquireTokenSilent(silentRequest) {
+      return this.controller.acquireTokenSilent(silentRequest);
+    }
+    /**
+     * This function redeems an authorization code (passed as code) from the eSTS token endpoint.
+     * This authorization code should be acquired server-side using a confidential client to acquire a spa_code.
+     * This API is not indended for normal authorization code acquisition and redemption.
+     *
+     * Redemption of this authorization code will not require PKCE, as it was acquired by a confidential client.
+     *
+     * @param request {@link AuthorizationCodeRequest}
+     * @returns A promise that is fulfilled when this function has completed, or rejected if an error was raised.
+     */
+    acquireTokenByCode(request) {
+      return this.controller.acquireTokenByCode(request);
+    }
+    /**
+     * Adds event callbacks to array
+     * @param callback
+     */
+    addEventCallback(callback, eventTypes) {
+      return this.controller.addEventCallback(callback, eventTypes);
+    }
+    /**
+     * Removes callback with provided id from callback array
+     * @param callbackId
+     */
+    removeEventCallback(callbackId) {
+      return this.controller.removeEventCallback(callbackId);
+    }
+    /**
+     * Registers a callback to receive performance events.
+     *
+     * @param {PerformanceCallbackFunction} callback
+     * @returns {string}
+     */
+    addPerformanceCallback(callback) {
+      return this.controller.addPerformanceCallback(callback);
+    }
+    /**
+     * Removes a callback registered with addPerformanceCallback.
+     *
+     * @param {string} callbackId
+     * @returns {boolean}
+     */
+    removePerformanceCallback(callbackId) {
+      return this.controller.removePerformanceCallback(callbackId);
+    }
+    /**
+     * Adds event listener that emits an event when a user account is added or removed from localstorage in a different browser tab or window
+     */
+    enableAccountStorageEvents() {
+      this.controller.enableAccountStorageEvents();
+    }
+    /**
+     * Removes event listener that emits an event when a user account is added or removed from localstorage in a different browser tab or window
+     */
+    disableAccountStorageEvents() {
+      this.controller.disableAccountStorageEvents();
+    }
+    /**
+     * Returns the first account found in the cache that matches the account filter passed in.
+     * @param accountFilter
+     * @returns The first account found in the cache matching the provided filter or null if no account could be found.
+     */
+    getAccount(accountFilter) {
+      return this.controller.getAccount(accountFilter);
+    }
+    /**
+     * Returns the signed in account matching homeAccountId.
+     * (the account object is created at the time of successful login)
+     * or null when no matching account is found
+     * @param homeAccountId
+     * @returns The account object stored in MSAL
+     * @deprecated - Use getAccount instead
+     */
+    getAccountByHomeId(homeAccountId) {
+      return this.controller.getAccountByHomeId(homeAccountId);
+    }
+    /**
+     * Returns the signed in account matching localAccountId.
+     * (the account object is created at the time of successful login)
+     * or null when no matching account is found
+     * @param localAccountId
+     * @returns The account object stored in MSAL
+     * @deprecated - Use getAccount instead
+     */
+    getAccountByLocalId(localId) {
+      return this.controller.getAccountByLocalId(localId);
+    }
+    /**
+     * Returns the signed in account matching username.
+     * (the account object is created at the time of successful login)
+     * or null when no matching account is found.
+     * This API is provided for convenience but getAccountById should be used for best reliability
+     * @param userName
+     * @returns The account object stored in MSAL
+     * @deprecated - Use getAccount instead
+     */
+    getAccountByUsername(userName) {
+      return this.controller.getAccountByUsername(userName);
+    }
+    /**
+     * Returns all the accounts in the cache that match the optional filter. If no filter is provided, all accounts are returned.
+     * @param accountFilter - (Optional) filter to narrow down the accounts returned
+     * @returns Array of AccountInfo objects in cache
+     */
+    getAllAccounts(accountFilter) {
+      return this.controller.getAllAccounts(accountFilter);
+    }
+    /**
+     * Event handler function which allows users to fire events after the PublicClientApplication object
+     * has loaded during redirect flows. This should be invoked on all page loads involved in redirect
+     * auth flows.
+     * @param hash Hash to process. Defaults to the current value of window.location.hash. Only needs to be provided explicitly if the response to be handled is not contained in the current value.
+     * @returns Token response or null. If the return value is null, then no auth redirect was detected.
+     */
+    handleRedirectPromise(hash) {
+      return this.controller.handleRedirectPromise(hash);
+    }
+    /**
+     * Use when initiating the login process via opening a popup window in the user's browser
+     *
+     * @param request
+     *
+     * @returns A promise that is fulfilled when this function has completed, or rejected if an error was raised.
+     */
+    loginPopup(request) {
+      return this.controller.loginPopup(request);
+    }
+    /**
+     * Use when initiating the login process by redirecting the user's browser to the authorization endpoint. This function redirects the page, so
+     * any code that follows this function will not execute.
+     *
+     * IMPORTANT: It is NOT recommended to have code that is dependent on the resolution of the Promise. This function will navigate away from the current
+     * browser window. It currently returns a Promise in order to reflect the asynchronous nature of the code running in this function.
+     *
+     * @param request
+     */
+    loginRedirect(request) {
+      return this.controller.loginRedirect(request);
+    }
+    /**
+     * Deprecated logout function. Use logoutRedirect or logoutPopup instead
+     * @param logoutRequest
+     * @deprecated
+     */
+    logout(logoutRequest) {
+      return this.controller.logout(logoutRequest);
+    }
+    /**
+     * Use to log out the current user, and redirect the user to the postLogoutRedirectUri.
+     * Default behaviour is to redirect the user to `window.location.href`.
+     * @param logoutRequest
+     */
+    logoutRedirect(logoutRequest) {
+      return this.controller.logoutRedirect(logoutRequest);
+    }
+    /**
+     * Clears local cache for the current user then opens a popup window prompting the user to sign-out of the server
+     * @param logoutRequest
+     */
+    logoutPopup(logoutRequest) {
+      return this.controller.logoutPopup(logoutRequest);
+    }
+    /**
+     * This function uses a hidden iframe to fetch an authorization code from the eSTS. There are cases where this may not work:
+     * - Any browser using a form of Intelligent Tracking Prevention
+     * - If there is not an established session with the service
+     *
+     * In these cases, the request must be done inside a popup or full frame redirect.
+     *
+     * For the cases where interaction is required, you cannot send a request with prompt=none.
+     *
+     * If your refresh token has expired, you can use this function to fetch a new set of tokens silently as long as
+     * you session on the server still exists.
+     * @param request {@link SsoSilentRequest}
+     *
+     * @returns A promise that is fulfilled when this function has completed, or rejected if an error was raised.
+     */
+    ssoSilent(request) {
+      return this.controller.ssoSilent(request);
+    }
+    /**
+     * Gets the token cache for the application.
+     */
+    getTokenCache() {
+      return this.controller.getTokenCache();
+    }
+    /**
+     * Returns the logger instance
+     */
+    getLogger() {
+      return this.controller.getLogger();
+    }
+    /**
+     * Replaces the default logger set in configurations with new Logger with new configurations
+     * @param logger Logger instance
+     */
+    setLogger(logger) {
+      this.controller.setLogger(logger);
+    }
+    /**
+     * Sets the account to use as the active account. If no account is passed to the acquireToken APIs, then MSAL will use this active account.
+     * @param account
+     */
+    setActiveAccount(account2) {
+      this.controller.setActiveAccount(account2);
+    }
+    /**
+     * Gets the currently active account
+     */
+    getActiveAccount() {
+      return this.controller.getActiveAccount();
+    }
+    /**
+     * Called by wrapper libraries (Angular & React) to set SKU and Version passed down to telemetry, logger, etc.
+     * @param sku
+     * @param version
+     */
+    initializeWrapperLibrary(sku, version3) {
+      return this.controller.initializeWrapperLibrary(sku, version3);
+    }
+    /**
+     * Sets navigation client
+     * @param navigationClient
+     */
+    setNavigationClient(navigationClient) {
+      this.controller.setNavigationClient(navigationClient);
+    }
+    /**
+     * Returns the configuration object
+     * @internal
+     */
+    getConfiguration() {
+      return this.controller.getConfiguration();
+    }
+    /**
+     * Hydrates cache with the tokens and account in the AuthenticationResult object
+     * @param result
+     * @param request - The request object that was used to obtain the AuthenticationResult
+     * @returns
+     */
+    async hydrateCache(result, request) {
+      return this.controller.hydrateCache(result, request);
+    }
+    /**
+     * Clears tokens and account from the browser cache.
+     * @param logoutRequest
+     */
+    clearCache(logoutRequest) {
+      return this.controller.clearCache(logoutRequest);
+    }
+  };
+
+  // node_modules/@azure/msal-browser/dist/app/IPublicClientApplication.mjs
+  var stubbedPublicClientApplication = {
+    initialize: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    acquireTokenPopup: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    acquireTokenRedirect: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    acquireTokenSilent: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    acquireTokenByCode: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    getAllAccounts: () => {
+      return [];
+    },
+    getAccount: () => {
+      return null;
+    },
+    getAccountByHomeId: () => {
+      return null;
+    },
+    getAccountByUsername: () => {
+      return null;
+    },
+    getAccountByLocalId: () => {
+      return null;
+    },
+    handleRedirectPromise: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    loginPopup: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    loginRedirect: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    logout: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    logoutRedirect: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    logoutPopup: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    ssoSilent: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    addEventCallback: () => {
+      return null;
+    },
+    removeEventCallback: () => {
+      return;
+    },
+    addPerformanceCallback: () => {
+      return "";
+    },
+    removePerformanceCallback: () => {
+      return false;
+    },
+    enableAccountStorageEvents: () => {
+      return;
+    },
+    disableAccountStorageEvents: () => {
+      return;
+    },
+    getTokenCache: () => {
+      throw createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled);
+    },
+    getLogger: () => {
+      throw createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled);
+    },
+    setLogger: () => {
+      return;
+    },
+    setActiveAccount: () => {
+      return;
+    },
+    getActiveAccount: () => {
+      return null;
+    },
+    initializeWrapperLibrary: () => {
+      return;
+    },
+    setNavigationClient: () => {
+      return;
+    },
+    getConfiguration: () => {
+      throw createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled);
+    },
+    hydrateCache: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    },
+    clearCache: () => {
+      return Promise.reject(createBrowserConfigurationAuthError(stubbedPublicClientApplicationCalled));
+    }
+  };
+
+  // node_modules/@azure/msal-browser/dist/event/EventMessage.mjs
+  var EventMessageUtils = class {
+    /**
+     * Gets interaction status from event message
+     * @param message
+     * @param currentStatus
+     */
+    static getInteractionStatusFromEvent(message, currentStatus) {
+      switch (message.eventType) {
+        case EventType.LOGIN_START:
+          return InteractionStatus.Login;
+        case EventType.SSO_SILENT_START:
+          return InteractionStatus.SsoSilent;
+        case EventType.ACQUIRE_TOKEN_START:
+          if (message.interactionType === InteractionType.Redirect || message.interactionType === InteractionType.Popup) {
+            return InteractionStatus.AcquireToken;
+          }
+          break;
+        case EventType.HANDLE_REDIRECT_START:
+          return InteractionStatus.HandleRedirect;
+        case EventType.LOGOUT_START:
+          return InteractionStatus.Logout;
+        case EventType.SSO_SILENT_SUCCESS:
+        case EventType.SSO_SILENT_FAILURE:
+          if (currentStatus && currentStatus !== InteractionStatus.SsoSilent) {
+            break;
+          }
+          return InteractionStatus.None;
+        case EventType.LOGOUT_END:
+          if (currentStatus && currentStatus !== InteractionStatus.Logout) {
+            break;
+          }
+          return InteractionStatus.None;
+        case EventType.HANDLE_REDIRECT_END:
+          if (currentStatus && currentStatus !== InteractionStatus.HandleRedirect) {
+            break;
+          }
+          return InteractionStatus.None;
+        case EventType.LOGIN_SUCCESS:
+        case EventType.LOGIN_FAILURE:
+        case EventType.ACQUIRE_TOKEN_SUCCESS:
+        case EventType.ACQUIRE_TOKEN_FAILURE:
+        case EventType.RESTORE_FROM_BFCACHE:
+          if (message.interactionType === InteractionType.Redirect || message.interactionType === InteractionType.Popup) {
+            if (currentStatus && currentStatus !== InteractionStatus.Login && currentStatus !== InteractionStatus.AcquireToken) {
+              break;
+            }
+            return InteractionStatus.None;
+          }
+          break;
+      }
+      return null;
+    }
+  };
+
+  // node_modules/@azure/msal-browser/dist/crypto/SignedHttpRequest.mjs
+  var SignedHttpRequest = class {
+    constructor(shrParameters, shrOptions) {
+      const loggerOptions = shrOptions && shrOptions.loggerOptions || {};
+      this.logger = new Logger(loggerOptions, name2, version2);
+      this.cryptoOps = new CryptoOps(this.logger);
+      this.popTokenGenerator = new PopTokenGenerator(this.cryptoOps);
+      this.shrParameters = shrParameters;
+    }
+    /**
+     * Generates and caches a keypair for the given request options.
+     * @returns Public key digest, which should be sent to the token issuer.
+     */
+    async generatePublicKeyThumbprint() {
+      const { kid } = await this.popTokenGenerator.generateKid(this.shrParameters);
+      return kid;
+    }
+    /**
+     * Generates a signed http request for the given payload with the given key.
+     * @param payload Payload to sign (e.g. access token)
+     * @param publicKeyThumbprint Public key digest (from generatePublicKeyThumbprint API)
+     * @param claims Additional claims to include/override in the signed JWT
+     * @returns Pop token signed with the corresponding private key
+     */
+    async signRequest(payload, publicKeyThumbprint, claims) {
+      return this.popTokenGenerator.signPayload(payload, publicKeyThumbprint, this.shrParameters, claims);
+    }
+    /**
+     * Removes cached keys from browser for given public key thumbprint
+     * @param publicKeyThumbprint Public key digest (from generatePublicKeyThumbprint API)
+     * @returns If keys are properly deleted
+     */
+    async removeKeys(publicKeyThumbprint) {
+      return this.cryptoOps.removeTokenBindingKey(publicKeyThumbprint).then(() => true).catch((error) => {
+        if (error instanceof ClientAuthError && error.errorCode === ClientAuthErrorCodes_exports.bindingKeyNotRemoved) {
+          return false;
+        }
+        throw error;
+      });
+    }
+  };
+
+  // node_modules/@azure/msal-browser/dist/telemetry/BrowserPerformanceClient.mjs
+  function getPerfMeasurementModule() {
+    let sessionStorage;
+    try {
+      sessionStorage = window[BrowserCacheLocation.SessionStorage];
+      const perfEnabled = sessionStorage?.getItem(BROWSER_PERF_ENABLED_KEY);
+      if (Number(perfEnabled) === 1) {
+        return Promise.resolve().then(() => (init_BrowserPerformanceMeasurement(), BrowserPerformanceMeasurement_exports));
+      }
+    } catch (e) {
+    }
+    return void 0;
+  }
+  function supportsBrowserPerformanceNow() {
+    return typeof window !== "undefined" && typeof window.performance !== "undefined" && typeof window.performance.now === "function";
+  }
+  function getPerfDurationMs(startTime) {
+    if (!startTime || !supportsBrowserPerformanceNow()) {
+      return void 0;
+    }
+    return Math.round(window.performance.now() - startTime);
+  }
+  var BrowserPerformanceClient = class extends PerformanceClient {
+    constructor(configuration, intFields, abbreviations) {
+      super(configuration.auth.clientId, configuration.auth.authority || `${Constants.DEFAULT_AUTHORITY}`, new Logger(configuration.system?.loggerOptions || {}, name2, version2), name2, version2, configuration.telemetry?.application || {
+        appName: "",
+        appVersion: ""
+      }, intFields, abbreviations);
+    }
+    generateId() {
+      return createNewGuid();
+    }
+    getPageVisibility() {
+      return document.visibilityState?.toString() || null;
+    }
+    deleteIncompleteSubMeasurements(inProgressEvent) {
+      void getPerfMeasurementModule()?.then((module) => {
+        const rootEvent = this.eventsByCorrelationId.get(inProgressEvent.event.correlationId);
+        const isRootEvent = rootEvent && rootEvent.eventId === inProgressEvent.event.eventId;
+        const incompleteMeasurements = [];
+        if (isRootEvent && rootEvent?.incompleteSubMeasurements) {
+          rootEvent.incompleteSubMeasurements.forEach((subMeasurement) => {
+            incompleteMeasurements.push({ ...subMeasurement });
+          });
+        }
+        module.BrowserPerformanceMeasurement.flushMeasurements(inProgressEvent.event.correlationId, incompleteMeasurements);
+      });
+    }
+    /**
+     * Starts measuring performance for a given operation. Returns a function that should be used to end the measurement.
+     * Also captures browser page visibilityState.
+     *
+     * @param {PerformanceEvents} measureName
+     * @param {?string} [correlationId]
+     * @returns {((event?: Partial<PerformanceEvent>) => PerformanceEvent| null)}
+     */
+    startMeasurement(measureName, correlationId) {
+      const startPageVisibility = this.getPageVisibility();
+      const inProgressEvent = super.startMeasurement(measureName, correlationId);
+      const startTime = supportsBrowserPerformanceNow() ? window.performance.now() : void 0;
+      const browserMeasurement = getPerfMeasurementModule()?.then((module) => {
+        return new module.BrowserPerformanceMeasurement(measureName, inProgressEvent.event.correlationId);
+      });
+      void browserMeasurement?.then((measurement) => measurement.startMeasurement());
+      return {
+        ...inProgressEvent,
+        end: (event, error, account2) => {
+          const res = inProgressEvent.end({
+            ...event,
+            startPageVisibility,
+            endPageVisibility: this.getPageVisibility(),
+            durationMs: getPerfDurationMs(startTime)
+          }, error, account2);
+          void browserMeasurement?.then((measurement) => measurement.endMeasurement());
+          this.deleteIncompleteSubMeasurements(inProgressEvent);
+          return res;
+        },
+        discard: () => {
+          inProgressEvent.discard();
+          void browserMeasurement?.then((measurement) => measurement.flushMeasurement());
+          this.deleteIncompleteSubMeasurements(inProgressEvent);
+        }
+      };
+    }
+    /**
+     * Adds pre-queue time to preQueueTimeByCorrelationId map.
+     * @param {PerformanceEvents} eventName
+     * @param {?string} correlationId
+     * @returns
+     */
+    setPreQueueTime(eventName, correlationId) {
+      if (!supportsBrowserPerformanceNow()) {
+        this.logger.trace(`BrowserPerformanceClient: window performance API not available, unable to set telemetry queue time for ${eventName}`);
+        return;
+      }
+      if (!correlationId) {
+        this.logger.trace(`BrowserPerformanceClient: correlationId for ${eventName} not provided, unable to set telemetry queue time`);
+        return;
+      }
+      const preQueueEvent = this.preQueueTimeByCorrelationId.get(correlationId);
+      if (preQueueEvent) {
+        this.logger.trace(`BrowserPerformanceClient: Incomplete pre-queue ${preQueueEvent.name} found`, correlationId);
+        this.addQueueMeasurement(preQueueEvent.name, correlationId, void 0, true);
+      }
+      this.preQueueTimeByCorrelationId.set(correlationId, {
+        name: eventName,
+        time: window.performance.now()
+      });
+    }
+    /**
+     * Calculates and adds queue time measurement for given performance event.
+     *
+     * @param {PerformanceEvents} eventName
+     * @param {?string} correlationId
+     * @param {?number} queueTime
+     * @param {?boolean} manuallyCompleted - indicator for manually completed queue measurements
+     * @returns
+     */
+    addQueueMeasurement(eventName, correlationId, queueTime, manuallyCompleted) {
+      if (!supportsBrowserPerformanceNow()) {
+        this.logger.trace(`BrowserPerformanceClient: window performance API not available, unable to add queue measurement for ${eventName}`);
+        return;
+      }
+      if (!correlationId) {
+        this.logger.trace(`BrowserPerformanceClient: correlationId for ${eventName} not provided, unable to add queue measurement`);
+        return;
+      }
+      const preQueueTime = super.getPreQueueTime(eventName, correlationId);
+      if (!preQueueTime) {
+        return;
+      }
+      const currentTime = window.performance.now();
+      const resQueueTime = queueTime || super.calculateQueuedTime(preQueueTime, currentTime);
+      return super.addQueueMeasurement(eventName, correlationId, resQueueTime, manuallyCompleted);
+    }
+  };
+
+  // node_modules/@azure/msal-browser/dist/index.mjs
+  init_BrowserPerformanceMeasurement();
 
   // src/auth/msalConfig.ts
   var msalConfig = {
     auth: {
       clientId: "d2d5f6e0-734b-4016-b590-8af18cabbae4",
-      // TODO: wstaw ID aplikacji z Entra ID
-      authority: "https://login.microsoftonline.com/46df1a92-7238-45ba-8f35-a8278259662c",
-      // TODO: wstaw tenant ID
-      // Działa na dowolnym hoście (musi być dodany jako Redirect URI w Entra ID)
+      authority: "https://login.microsoftonline.com/4d6f1a92-7238-45ba-8f35-a8278259662c",
       redirectUri: window.location.origin,
-      postLogoutRedirectUri: "https://klimatimeco.sharepoint.com",
-      // Opcjonalnie: unikaj powrotu do ścieżki żądania logowania po popup/redirect
-      navigateToLoginRequestUrl: false
+      postLogoutRedirectUri: window.location.origin,
+      navigateToLoginRequestUrl: true
     },
     cache: {
       cacheLocation: "localStorage",
       storeAuthStateInCookie: false
     },
     system: {
-      // Przydatne przy osadzaniu w iframe (gdyby kiedyś użyć redirect flow)
       allowRedirectInIframe: true
+      // istotne dla osadzenia jako web part (iframe)
     }
   };
   var graphScopes = [
@@ -14543,19 +17230,21 @@ ${serverError}`);
     "profile",
     "offline_access",
     "User.Read",
-    "Files.ReadWrite",
-    "Sites.Read.All",
+    // Ujednolicone – pełny dostęp jak w Flutter:
+    "Files.ReadWrite.All",
     "Sites.ReadWrite.All"
+    // (Opcjonalnie dodaj 'Sites.Read.All' jeśli naprawdę potrzebne – zwykle nadmiarowe przy ReadWrite.All)
   ];
   var loginRequest = { scopes: graphScopes };
 
   // src/services/sharepointUpload.ts
   var AAD = {
-    tenantId: "46df1a92-7238-45ba-8f35-a8278259662c",
-    authority: "https://login.microsoftonline.com/46df1a92-7238-45ba-8f35-a8278259662c",
+    tenantId: "4d6f1a92-7238-45ba-8f35-a8278259662c",
+    // ujednolicone z konfiguracją Flutter
+    authority: "https://login.microsoftonline.com/4d6f1a92-7238-45ba-8f35-a8278259662c",
     oauth2: {
-      authorizeV2: "https://login.microsoftonline.com/46df1a92-7238-45ba-8f35-a8278259662c/oauth2/v2.0/authorize",
-      tokenV2: "https://login.microsoftonline.com/46df1a92-7238-45ba-8f35-a8278259662c/oauth2/v2.0/token"
+      authorizeV2: "https://login.microsoftonline.com/4d6f1a92-7238-45ba-8f35-a8278259662c/oauth2/v2.0/authorize",
+      tokenV2: "https://login.microsoftonline.com/4d6f1a92-7238-45ba-8f35-a8278259662c/oauth2/v2.0/token"
     },
     // Identyfikator aplikacji (klienta) z widoku "Protokoły"
     clientId: "d2d5f6e0-734b-4016-b590-8af18cabbae4",
@@ -14588,24 +17277,101 @@ ${serverError}`);
     if (!pca) pca = new PublicClientApplication(msalConfig);
     return pca;
   }
-  async function ensureLogin() {
+  var _pcaInitPromise = null;
+  async function initPcaOnce() {
     const inst = getPca();
-    const accs = inst.getAllAccounts();
-    account = accs[0] || null;
-    if (!account) {
+    if (typeof inst.initialize !== "function") return;
+    if (!_pcaInitPromise) {
+      _pcaInitPromise = inst.initialize().catch((err) => {
+        _pcaInitPromise = null;
+        throw err;
+      });
+    }
+    await _pcaInitPromise;
+  }
+  function patchMsalAutoInitPrototype() {
+    const cls = PublicClientApplication;
+    const proto = cls?.prototype;
+    if (!proto || proto.__spupPatched) return;
+    const ensure = async function() {
+      if (typeof this.initialize === "function") {
+        this.__spupInitPromise ||= this.initialize();
+        await this.__spupInitPromise;
+      }
+    };
+    const wrap = (name3) => {
+      const orig = proto[name3];
+      if (typeof orig !== "function") return;
+      proto[name3] = async function(...args) {
+        await ensure.call(this);
+        return orig.apply(this, args);
+      };
+    };
+    ["handleRedirectPromise", "loginPopup", "loginRedirect", "acquireTokenSilent", "acquireTokenPopup", "acquireTokenRedirect", "getAllAccounts"].forEach(wrap);
+    proto.__spupPatched = true;
+  }
+  if (typeof window !== "undefined") {
+    window.msal = window.msal || dist_exports;
+    patchMsalAutoInitPrototype();
+  }
+  async function processRedirectOnce() {
+    try {
+      const p = getPca();
+      await initPcaOnce();
+      const result = await p.handleRedirectPromise();
+      if (result?.account) account = result.account;
+    } catch {
+    }
+  }
+  var _redirectProcessed = false;
+  async function ensureLogin() {
+    await initPcaOnce();
+    if (!_redirectProcessed) {
+      _redirectProcessed = true;
+      await processRedirectOnce();
+    }
+    const inst = getPca();
+    if (account) return;
+    const existing = inst.getAllAccounts();
+    if (existing.length) {
+      account = existing[0];
+      try {
+        await inst.acquireTokenSilent({ account, scopes: loginRequest.scopes });
+        return;
+      } catch {
+      }
+    }
+    const inIframe = window.self !== window.top;
+    try {
       const resp = await inst.loginPopup(loginRequest);
       account = resp.account;
+    } catch (e) {
+      if (inIframe || e instanceof InteractionRequiredAuthError || String(e?.message || e).includes("popup") || String(e?.errorMessage || "").includes("blocked")) {
+        await inst.loginRedirect(loginRequest);
+        return;
+      }
+      throw e;
     }
   }
   async function getToken(scopes = loginRequest.scopes) {
+    await ensureLogin();
     const inst = getPca();
-    if (!account) await ensureLogin();
+    if (!account) {
+      const accs = inst.getAllAccounts();
+      if (accs.length) account = accs[0];
+    }
+    if (!account) throw new Error("Brak konta (nie uko\u0144czono logowania).");
     try {
       const resp = await inst.acquireTokenSilent({ account, scopes });
       return resp.accessToken;
     } catch {
-      const resp = await inst.acquireTokenPopup({ account, scopes });
-      return resp.accessToken;
+      try {
+        const resp = await inst.acquireTokenPopup({ account, scopes });
+        return resp.accessToken;
+      } catch {
+        await inst.acquireTokenRedirect({ account, scopes });
+        throw new Error("Redirect token flow \u2013 pon\xF3w \u017C\u0105danie po powrocie.");
+      }
     }
   }
   async function getSiteId(accessToken, hostname, sitePath) {
@@ -14770,6 +17536,7 @@ ${serverError}`);
       rebind: () => attachGlobal("manual")
     };
     window.SPUP = { ...window.SPUP || {}, ...api, __attachedAt: (/* @__PURE__ */ new Date()).toISOString(), __reason: reason };
+    initPcaOnce().catch((err) => console.warn("[SPUP] MSAL initialize() failed (will retry on demand):", err));
     if (!("__silent" in window.SPUP)) {
       console.info("[SPUP] attached (reason=" + reason + ")", window.SPUP);
     }
@@ -14782,6 +17549,82 @@ ${serverError}`);
   window.addEventListener("SPUP:rebind", () => attachGlobal("event:rebind"));
 })();
 /*! Bundled license information:
+
+@azure/msal-browser/dist/telemetry/BrowserPerformanceMeasurement.mjs:
+@azure/msal-browser/dist/error/BrowserAuthErrorCodes.mjs:
+@azure/msal-browser/dist/error/BrowserAuthError.mjs:
+@azure/msal-browser/dist/utils/BrowserConstants.mjs:
+@azure/msal-browser/dist/encode/Base64Encode.mjs:
+@azure/msal-browser/dist/encode/Base64Decode.mjs:
+@azure/msal-browser/dist/crypto/BrowserCrypto.mjs:
+@azure/msal-browser/dist/error/BrowserConfigurationAuthErrorCodes.mjs:
+@azure/msal-browser/dist/error/BrowserConfigurationAuthError.mjs:
+@azure/msal-browser/dist/utils/BrowserUtils.mjs:
+@azure/msal-browser/dist/navigation/NavigationClient.mjs:
+@azure/msal-browser/dist/network/FetchClient.mjs:
+@azure/msal-browser/dist/config/Configuration.mjs:
+@azure/msal-browser/dist/packageMetadata.mjs:
+@azure/msal-browser/dist/cache/CacheKeys.mjs:
+@azure/msal-browser/dist/operatingcontext/BaseOperatingContext.mjs:
+@azure/msal-browser/dist/naa/BridgeStatusCode.mjs:
+@azure/msal-browser/dist/naa/BridgeProxy.mjs:
+@azure/msal-browser/dist/operatingcontext/NestedAppOperatingContext.mjs:
+@azure/msal-browser/dist/operatingcontext/StandardOperatingContext.mjs:
+@azure/msal-browser/dist/cache/DatabaseStorage.mjs:
+@azure/msal-browser/dist/cache/MemoryStorage.mjs:
+@azure/msal-browser/dist/cache/AsyncMemoryStorage.mjs:
+@azure/msal-browser/dist/crypto/CryptoOps.mjs:
+@azure/msal-browser/dist/cache/CookieStorage.mjs:
+@azure/msal-browser/dist/cache/CacheHelpers.mjs:
+@azure/msal-browser/dist/cache/EncryptedData.mjs:
+@azure/msal-browser/dist/cache/LocalStorage.mjs:
+@azure/msal-browser/dist/cache/SessionStorage.mjs:
+@azure/msal-browser/dist/event/EventType.mjs:
+@azure/msal-browser/dist/utils/Helpers.mjs:
+@azure/msal-browser/dist/cache/BrowserCacheManager.mjs:
+@azure/msal-browser/dist/cache/AccountManager.mjs:
+@azure/msal-browser/dist/event/EventHandler.mjs:
+@azure/msal-browser/dist/interaction_client/BaseInteractionClient.mjs:
+@azure/msal-browser/dist/request/RequestHelpers.mjs:
+@azure/msal-browser/dist/interaction_client/StandardInteractionClient.mjs:
+@azure/msal-browser/dist/utils/BrowserProtocolUtils.mjs:
+@azure/msal-browser/dist/response/ResponseHandler.mjs:
+@azure/msal-browser/dist/interaction_handler/InteractionHandler.mjs:
+@azure/msal-browser/dist/error/NativeAuthErrorCodes.mjs:
+@azure/msal-browser/dist/broker/nativeBroker/NativeStatusCodes.mjs:
+@azure/msal-browser/dist/error/NativeAuthError.mjs:
+@azure/msal-browser/dist/interaction_client/SilentCacheClient.mjs:
+@azure/msal-browser/dist/interaction_client/PlatformAuthInteractionClient.mjs:
+@azure/msal-browser/dist/protocol/Authorize.mjs:
+@azure/msal-browser/dist/crypto/PkceGenerator.mjs:
+@azure/msal-browser/dist/broker/nativeBroker/PlatformAuthExtensionHandler.mjs:
+@azure/msal-browser/dist/broker/nativeBroker/PlatformAuthDOMHandler.mjs:
+@azure/msal-browser/dist/broker/nativeBroker/PlatformAuthProvider.mjs:
+@azure/msal-browser/dist/interaction_client/PopupClient.mjs:
+@azure/msal-browser/dist/interaction_client/RedirectClient.mjs:
+@azure/msal-browser/dist/interaction_handler/SilentHandler.mjs:
+@azure/msal-browser/dist/interaction_client/SilentIframeClient.mjs:
+@azure/msal-browser/dist/interaction_client/SilentRefreshClient.mjs:
+@azure/msal-browser/dist/cache/TokenCache.mjs:
+@azure/msal-browser/dist/interaction_client/HybridSpaAuthorizationCodeClient.mjs:
+@azure/msal-browser/dist/interaction_client/SilentAuthCodeClient.mjs:
+@azure/msal-browser/dist/utils/MsalFrameStatsUtils.mjs:
+@azure/msal-browser/dist/controllers/StandardController.mjs:
+@azure/msal-browser/dist/naa/BridgeError.mjs:
+@azure/msal-browser/dist/naa/mapping/NestedAppAuthAdapter.mjs:
+@azure/msal-browser/dist/error/NestedAppAuthError.mjs:
+@azure/msal-browser/dist/controllers/NestedAppAuthController.mjs:
+@azure/msal-browser/dist/controllers/ControllerFactory.mjs:
+@azure/msal-browser/dist/app/PublicClientApplication.mjs:
+@azure/msal-browser/dist/controllers/UnknownOperatingContextController.mjs:
+@azure/msal-browser/dist/operatingcontext/UnknownOperatingContext.mjs:
+@azure/msal-browser/dist/app/PublicClientNext.mjs:
+@azure/msal-browser/dist/app/IPublicClientApplication.mjs:
+@azure/msal-browser/dist/event/EventMessage.mjs:
+@azure/msal-browser/dist/crypto/SignedHttpRequest.mjs:
+@azure/msal-browser/dist/telemetry/BrowserPerformanceClient.mjs:
+@azure/msal-browser/dist/index.mjs:
+  (*! @azure/msal-browser v4.24.0 2025-09-24 *)
 
 @azure/msal-common/dist/utils/Constants.mjs:
 @azure/msal-common/dist/error/AuthErrorCodes.mjs:
@@ -14841,71 +17684,12 @@ ${serverError}`);
 @azure/msal-common/dist/client/SilentFlowClient.mjs:
 @azure/msal-common/dist/network/INetworkModule.mjs:
 @azure/msal-common/dist/protocol/Authorize.mjs:
+@azure/msal-common/dist/request/AuthenticationHeaderParser.mjs:
 @azure/msal-common/dist/telemetry/server/ServerTelemetryManager.mjs:
 @azure/msal-common/dist/error/JoseHeaderErrorCodes.mjs:
 @azure/msal-common/dist/error/JoseHeaderError.mjs:
 @azure/msal-common/dist/crypto/JoseHeader.mjs:
+@azure/msal-common/dist/telemetry/performance/PerformanceClient.mjs:
 @azure/msal-common/dist/index-browser.mjs:
   (*! @azure/msal-common v15.13.0 2025-09-24 *)
-
-@azure/msal-browser/dist/error/BrowserAuthErrorCodes.mjs:
-@azure/msal-browser/dist/error/BrowserAuthError.mjs:
-@azure/msal-browser/dist/utils/BrowserConstants.mjs:
-@azure/msal-browser/dist/encode/Base64Encode.mjs:
-@azure/msal-browser/dist/encode/Base64Decode.mjs:
-@azure/msal-browser/dist/crypto/BrowserCrypto.mjs:
-@azure/msal-browser/dist/error/BrowserConfigurationAuthErrorCodes.mjs:
-@azure/msal-browser/dist/error/BrowserConfigurationAuthError.mjs:
-@azure/msal-browser/dist/utils/BrowserUtils.mjs:
-@azure/msal-browser/dist/navigation/NavigationClient.mjs:
-@azure/msal-browser/dist/network/FetchClient.mjs:
-@azure/msal-browser/dist/config/Configuration.mjs:
-@azure/msal-browser/dist/packageMetadata.mjs:
-@azure/msal-browser/dist/cache/CacheKeys.mjs:
-@azure/msal-browser/dist/operatingcontext/BaseOperatingContext.mjs:
-@azure/msal-browser/dist/operatingcontext/StandardOperatingContext.mjs:
-@azure/msal-browser/dist/cache/DatabaseStorage.mjs:
-@azure/msal-browser/dist/cache/MemoryStorage.mjs:
-@azure/msal-browser/dist/cache/AsyncMemoryStorage.mjs:
-@azure/msal-browser/dist/crypto/CryptoOps.mjs:
-@azure/msal-browser/dist/cache/CookieStorage.mjs:
-@azure/msal-browser/dist/cache/CacheHelpers.mjs:
-@azure/msal-browser/dist/cache/EncryptedData.mjs:
-@azure/msal-browser/dist/cache/LocalStorage.mjs:
-@azure/msal-browser/dist/cache/SessionStorage.mjs:
-@azure/msal-browser/dist/event/EventType.mjs:
-@azure/msal-browser/dist/utils/Helpers.mjs:
-@azure/msal-browser/dist/cache/BrowserCacheManager.mjs:
-@azure/msal-browser/dist/cache/AccountManager.mjs:
-@azure/msal-browser/dist/event/EventHandler.mjs:
-@azure/msal-browser/dist/interaction_client/BaseInteractionClient.mjs:
-@azure/msal-browser/dist/request/RequestHelpers.mjs:
-@azure/msal-browser/dist/interaction_client/StandardInteractionClient.mjs:
-@azure/msal-browser/dist/utils/BrowserProtocolUtils.mjs:
-@azure/msal-browser/dist/response/ResponseHandler.mjs:
-@azure/msal-browser/dist/interaction_handler/InteractionHandler.mjs:
-@azure/msal-browser/dist/error/NativeAuthErrorCodes.mjs:
-@azure/msal-browser/dist/broker/nativeBroker/NativeStatusCodes.mjs:
-@azure/msal-browser/dist/error/NativeAuthError.mjs:
-@azure/msal-browser/dist/interaction_client/SilentCacheClient.mjs:
-@azure/msal-browser/dist/interaction_client/PlatformAuthInteractionClient.mjs:
-@azure/msal-browser/dist/protocol/Authorize.mjs:
-@azure/msal-browser/dist/crypto/PkceGenerator.mjs:
-@azure/msal-browser/dist/broker/nativeBroker/PlatformAuthExtensionHandler.mjs:
-@azure/msal-browser/dist/broker/nativeBroker/PlatformAuthDOMHandler.mjs:
-@azure/msal-browser/dist/broker/nativeBroker/PlatformAuthProvider.mjs:
-@azure/msal-browser/dist/interaction_client/PopupClient.mjs:
-@azure/msal-browser/dist/interaction_client/RedirectClient.mjs:
-@azure/msal-browser/dist/interaction_handler/SilentHandler.mjs:
-@azure/msal-browser/dist/interaction_client/SilentIframeClient.mjs:
-@azure/msal-browser/dist/interaction_client/SilentRefreshClient.mjs:
-@azure/msal-browser/dist/cache/TokenCache.mjs:
-@azure/msal-browser/dist/interaction_client/HybridSpaAuthorizationCodeClient.mjs:
-@azure/msal-browser/dist/interaction_client/SilentAuthCodeClient.mjs:
-@azure/msal-browser/dist/utils/MsalFrameStatsUtils.mjs:
-@azure/msal-browser/dist/controllers/StandardController.mjs:
-@azure/msal-browser/dist/controllers/ControllerFactory.mjs:
-@azure/msal-browser/dist/app/PublicClientApplication.mjs:
-@azure/msal-browser/dist/index.mjs:
-  (*! @azure/msal-browser v4.24.0 2025-09-24 *)
 */

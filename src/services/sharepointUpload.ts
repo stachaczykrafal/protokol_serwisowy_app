@@ -1,4 +1,4 @@
-import { PublicClientApplication, AccountInfo, InteractionRequiredAuthError } from '@azure/msal-browser';
+import * as msal from '@azure/msal-browser';
 import { msalConfig, loginRequest } from '../auth/msalConfig';
 
 // Wartości z Twoich zrzutów ekranu (Entra ID):
@@ -47,11 +47,11 @@ export function makeUploadOptions(partial: {
   };
 }
 
-let pca: PublicClientApplication | null = null;
-let account: AccountInfo | null = null;
+let pca: msal.PublicClientApplication | null = null;
+let account: msal.AccountInfo | null = null;
 
 function getPca() {
-  if (!pca) pca = new PublicClientApplication(msalConfig);
+  if (!pca) pca = new msal.PublicClientApplication(msalConfig);
   return pca;
 }
 
@@ -110,7 +110,7 @@ export async function ensureLogin(): Promise<void> {
   } catch (e: any) {
     if (
       inIframe ||
-      e instanceof InteractionRequiredAuthError ||
+      e instanceof msal.InteractionRequiredAuthError ||
       String(e?.message || e).includes('popup') ||
       String(e?.errorMessage || '').includes('blocked')
     ) {
@@ -366,7 +366,7 @@ function attachGlobal(reason: string) {
     rebind: () => attachGlobal('manual')
   };
   window.SPUP = { ...(window.SPUP || {}), ...api, __attachedAt: new Date().toISOString(), __reason: reason };
-  // Eager init MSAL to avoid "uninitialized_public_client_application"
+  // Eager init MSAL, aby uniknąć "uninitialized_public_client_application"
   initPcaOnce().catch(err => console.warn('[SPUP] MSAL initialize() failed (will retry on demand):', err));
   // Diagnostyka w konsoli
   if (!('__silent' in window.SPUP)) {

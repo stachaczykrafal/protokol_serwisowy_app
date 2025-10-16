@@ -57,6 +57,37 @@
   </script>
 </head>
 <body>
+  <!-- Panel pomocniczy: osobne przyciski -->
+  <div id="spup-tools" style="position:fixed;right:10px;bottom:10px;z-index:99999;background:#fff8;padding:8px 10px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.2);font-family:system-ui,Segoe UI,Arial,sans-serif">
+    <button id="btnGen" style="margin-right:8px">Generuj PDF</button>
+    <button id="btnSave">Zapisz do SharePoint</button>
+  </div>
+  <script>
+    (function () {
+      const $ = (s) => document.querySelector(s);
+      $('#btnGen')?.addEventListener('click', () => {
+        // Aplikacja Flutter może nasłuchiwać tego zdarzenia i przygotować PDF do window.__lastPdfBlob
+        window.dispatchEvent(new CustomEvent('APP:generatePdf'));
+        alert('Zlecono generowanie PDF w aplikacji.');
+      });
+      $('#btnSave')?.addEventListener('click', async () => {
+        try {
+          if (!window.SPUP) throw new Error('SPUP nie został załadowany');
+          await window.SPUP.ensureM365Ready();
+          // Preferuj blob z aplikacji (jeśli wystawia)
+          const blob = window.__lastPdfBlob || new Blob(['Test PDF'], { type: 'application/pdf' });
+          const ts = new Date().toISOString().replace(/[:.]/g,'-');
+          const name = `Protokol-${ts}.pdf`;
+          const res = await window.SPUP.uploadProtocolPdfDefault(blob, name, { folderPath: '' });
+          alert('Wgrano: ' + res.webUrl);
+        } catch (e) {
+          console.error(e);
+          alert('Błąd zapisu: ' + (e?.message || e));
+        }
+      });
+    })();
+  </script>
+
   <script src="./msal-sharepoint.js?v=3" defer></script>
   <!-- Bootstrap Flutter -->
   <script src="flutter_bootstrap.js" async></script>

@@ -352,9 +352,8 @@ export async function ensureM365Ready() {
 // === P E W N Y   G L O B A L N Y   E K S P O R T ===
 declare global { interface Window { SPUP?: any; msal?: any; } }
 
-// Wystaw moduł msal jako window.msal (dla kodu oczekującego globalnego MSAL)
+// Udostępnij msal w globalu (dla kodu oczekującego window.msal)
 if (typeof window !== 'undefined') {
-  // nie nadpisuj, jeśli już istnieje (np. z CDN)
   (window as any).msal = (window as any).msal || msal;
 }
 
@@ -372,7 +371,7 @@ function attachGlobal(reason: string) {
     rebind: () => attachGlobal('manual')
   };
   window.SPUP = { ...(window.SPUP || {}), ...api, __attachedAt: new Date().toISOString(), __reason: reason };
-  // Eager init MSAL, aby uniknąć "uninitialized_public_client_application"
+  // Eager init MSAL
   initPcaOnce().catch(err => console.warn('[SPUP] MSAL initialize() failed (will retry on demand):', err));
   // Diagnostyka w konsoli
   if (!('__silent' in window.SPUP)) {
